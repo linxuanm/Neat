@@ -5,7 +5,8 @@ import java.util.function.Consumer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -38,17 +39,19 @@ import javafx.stage.Stage;
  * <p>Here is an example that creates a simple game window:</p>
  * <pre><code>
 public class ExampleGame extends NeatGame {
-
 	public static void main(String[] args) {
 		setWindowConfiguration(game -> {
 			game.setTitle("My Game");
 			game.setSize(1000, 200);
+			game.setBackgroundColor("#000000");
 		});
 		
 		launch(args);
 	}
 }
  * </code></pre>
+ * 
+ * @author David Ma
  */
 public abstract class NeatGame extends Application {
 
@@ -60,6 +63,10 @@ public abstract class NeatGame extends Application {
 	 * The title of the game window. Set the value through {@link #setTitle(String)}.
 	 */
 	private String title;
+	/**
+	 * The background color of the game window.
+	 */
+	private Color backgroundColor;
 	/**
 	 * The setup method of this instance. Set the value through {@link #setWindowConfiguration(Consumer)}.
 	 */
@@ -78,10 +85,10 @@ public abstract class NeatGame extends Application {
 	}
 	
 	/**
-	 * Sets the size for the window.
+	 * Sets the size for the game window.
 	 * 
-	 * @param width The width of the window.
-	 * @param height The height of the window.
+	 * @param width The width of the game window.
+	 * @param height The height of the game window.
 	 * @return This instance.
 	 */
 	public NeatGame setSize(int width, int height) {
@@ -92,9 +99,35 @@ public abstract class NeatGame extends Application {
 	}
 	
 	/**
-	 * Sets the title for the window.
+	 * Sets the background color for the game window.
 	 * 
-	 * @param title The title of the window.
+	 * @param hexColor The background color (hex values) of the game window.
+	 * @return This instance.
+	 */
+	public NeatGame setBackgroundColor(String hexColor) {
+		this.backgroundColor = Color.web(hexColor);
+		
+		return this;
+	}
+	
+	/**
+	 * Sets the background color for the game window.
+	 * 
+	 * @param red Value of red [0, 255].
+	 * @param green Value of green [0, 255].
+	 * @param blue Value of blue [0, 255].
+	 * @return This instance.
+	 */
+	public NeatGame setBackgroundColor(int red, int green, int blue) {
+		this.backgroundColor = new Color(red, green, blue, 1);
+		
+		return this;
+	}
+	
+	/**
+	 * Sets the title for the game window.
+	 * 
+	 * @param title The title of the game window.
 	 * @return This instance.
 	 */
 	public NeatGame setTitle(String title) {
@@ -110,9 +143,9 @@ public abstract class NeatGame extends Application {
 	public final void start(Stage stage) throws Exception {
 		if (windowConfiguration != null) windowConfiguration.accept(this);
 		
-		BorderPane root = new BorderPane();
+		Pane root = new Pane();
 		root.getChildren().add(group = new Group());
-		this.scene = new Scene(root, this.width, this.height);
+		this.scene = new Scene(root, this.width, this.height, this.backgroundColor);
 		
 		stage.setScene(this.scene);
 		stage.setTitle(this.title);
