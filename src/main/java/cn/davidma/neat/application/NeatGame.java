@@ -149,6 +149,7 @@ public abstract class NeatGame extends Application {
 		
 		stage.setScene(this.scene);
 		stage.setTitle(this.title);
+		stage.setResizable(false);
 		stage.show();
 	}
 }

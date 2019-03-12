@@ -1,7 +1,10 @@
 package main.java.cn.davidma.neat.layout;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import main.java.cn.davidma.neat.capability.IMovable;
 
 /**
  * A group can allpy certain actions to all of its children.
@@ -31,10 +34,13 @@ import java.util.function.Consumer;
  * 
  * @author David Ma
  */
-public class Group extends LayoutObject implements IParent {
+public class Group extends LayoutObject implements IParent, IMovable {
 
-	private double opacity;
 	private List<LayoutObject> children;
+	
+	public Group() {
+		children = new ArrayList<LayoutObject>();
+	}
 	
 	@Override
 	public void addChild(LayoutObject layoutObject) {
@@ -48,17 +54,53 @@ public class Group extends LayoutObject implements IParent {
 
 	@Override
 	public void mapChildren(Consumer<LayoutObject> operation) {
-		
+		for (LayoutObject i: this.children) {
+			operation.accept(i);
+		}
 	}
 
 	@Override
 	public int childrenCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.children.size();
 	}
 
 	@Override
 	public void clear() {
+		this.children.clear();
+	}
+
+	@Override
+	public void moveX(int xOffset) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void moveY(int yOffset) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void rotate(double angle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void rotate(double angle, int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void scale(double scale) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void scale(double scale, int x, int y) {
 		// TODO Auto-generated method stub
 		
 	}
