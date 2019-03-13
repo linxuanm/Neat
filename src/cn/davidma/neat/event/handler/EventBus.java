@@ -22,10 +22,10 @@ public final class EventBus {
 	/**
 	 * A map that maps all event listeners to their respective events.
 	 */
-	private Map<Class<? extends EventBase>, List<Method>> listeners;
+	private Map<Class<?>, List<Method>> listeners;
 	
 	public EventBus() {
-		this.listeners = new HashMap<Class<? extends EventBase>, List<Method>>();
+		this.listeners = new HashMap<Class<?>, List<Method>>();
 	}
 	
 	/**
@@ -50,21 +50,18 @@ public final class EventBus {
 					
 					Class<?> eventClazz = parameterClazz[0];
 					if (EventBase.class.isAssignableFrom(eventClazz)) {
+						if (!this.listeners.containsKey(eventClazz)) {
+							this.listeners.put(eventClazz, new ArrayList<Method>());
+						}
 						
+						this.listeners.get(eventClazz).add(method);
+					} else {
+						// Warning here.
 					}
 				}
 			}
 			
 			clazz = clazz.getSuperclass();
-		}
-	}
-	
-	/**
-	 * Subscribes the event handler to the given event.
-	 */
-	private void registerHandlerForEvent(Class<?> clazz, Method method) {
-		if (clazz instanceof Class<? extends EventBase>) {
-			
 		}
 	}
 }
