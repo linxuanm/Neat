@@ -18,28 +18,28 @@ public interface IParent {
 	public void addChild(LayoutObject layoutObject);
 	
 	/**
-	 * Get the children.
+	 * Gets the children.
 	 * 
 	 * @return A list of children.
 	 */
 	public List<LayoutObject> getChildren();
 	
 	/**
-	 * Invoke the consumer with each children.
+	 * Invokes the consumer with each children.
 	 * 
 	 * @param operation The consumer too be invoked on each children.
 	 */
 	public void mapChildren(Consumer<LayoutObject> operation);
 	
 	/**
-	 * Count the children.
+	 * Counts the children.
 	 * 
 	 * @return The number of children.
 	 */
 	public int childrenCount();
 	
 	/**
-	 * Clear all the children.
+	 * Clears all the children.
 	 */
 	public void clear();
 }

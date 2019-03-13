@@ -18,4 +18,13 @@ public enum EnumEvent {
 	private EnumEvent(Class<? extends EventBase> eventClass) {
 		this.eventClass = eventClass;
 	}
+	
+	/**
+	 * Gets the class of the event.
+	 * 
+	 * @return The class of the event.
+	 */
+	public Class<? extends EventBase> createEvent() {
+		return this.eventClass;
+	}
 }
