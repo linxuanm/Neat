@@ -1,4 +1,4 @@
-package main.java.cn.davidma.neat.capability;
+package cn.davidma.neat.capability;
 
 /**
  * This interface indicates that the object can be subjected to relative transform.

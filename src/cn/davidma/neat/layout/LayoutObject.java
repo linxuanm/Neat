@@ -1,4 +1,4 @@
-package main.java.cn.davidma.neat.layout;
+package cn.davidma.neat.layout;
 
 /**
  * A placeholder object used to structure the game scene.

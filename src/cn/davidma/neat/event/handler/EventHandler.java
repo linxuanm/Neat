@@ -1,4 +1,4 @@
-package main.java.cn.davidma.neat.event.handler;
+package cn.davidma.neat.event.handler;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

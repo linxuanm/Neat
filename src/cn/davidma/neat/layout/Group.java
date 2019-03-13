@@ -1,10 +1,10 @@
-package main.java.cn.davidma.neat.layout;
+package cn.davidma.neat.layout;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import main.java.cn.davidma.neat.capability.IMovable;
+import cn.davidma.neat.capability.IMovable;
 
 /**
  * A group can allpy certain actions to all of its children.

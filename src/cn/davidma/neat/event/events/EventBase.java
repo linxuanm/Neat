@@ -1,4 +1,4 @@
-package main.java.cn.davidma.neat.event.events;
+package cn.davidma.neat.event.events;
 
 /**
  * This is the base of all events.

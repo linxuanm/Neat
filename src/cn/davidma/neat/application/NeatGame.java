@@ -1,4 +1,4 @@
-package main.java.cn.davidma.neat.application;
+package cn.davidma.neat.application;
 
 import java.util.function.Consumer;
 

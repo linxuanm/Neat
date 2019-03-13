@@ -1,4 +1,4 @@
-package main.java.cn.davidma.neat.layout;
+package cn.davidma.neat.layout;
 
 import java.util.List;
 import java.util.function.Consumer;
