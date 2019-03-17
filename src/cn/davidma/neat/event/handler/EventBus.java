@@ -22,10 +22,10 @@ public final class EventBus {
 	/**
 	 * A map that maps all event listeners to their respective events.
 	 */
-	private Map<Class<?>, List<Method>> listeners;
+	private Map<Class<?>, List<EventEntry>> listeners;
 	
 	public EventBus() {
-		this.listeners = new HashMap<Class<?>, List<Method>>();
+		this.listeners = new HashMap<Class<?>, List<EventEntry>>();
 	}
 	
 	/**
@@ -36,32 +36,62 @@ public final class EventBus {
 	 * @param handlerObject An instance of event handler class.
 	 */
 	public void register(Object handlerObject) {
-		Class<?> clazz = handlerObject.getClass();
-		
-		while (clazz != Object.class) {
-			for (Method method: clazz.getDeclaredMethods()) {
-				if (method.isAnnotationPresent(EventHandler.class)) {
-					Class<?>[] parameterClazz = method.getParameterTypes();
-					
-					if (parameterClazz.length != 1) {
-						// Warning here.
-						continue;
+		for (Method method: handlerObject.getClass().getDeclaredMethods()) {
+			if (method.isAnnotationPresent(EventHandler.class)) {
+				Class<?>[] parameterClazz = method.getParameterTypes();
+				
+				if (parameterClazz.length != 1) {
+					// Warning here.
+					continue;
+				}
+				
+				Class<?> eventClazz = parameterClazz[0];
+				if (EventBase.class.isAssignableFrom(eventClazz)) {
+					if (!this.listeners.containsKey(eventClazz)) {
+						this.listeners.put(eventClazz, new ArrayList<EventEntry>());
 					}
 					
-					Class<?> eventClazz = parameterClazz[0];
-					if (EventBase.class.isAssignableFrom(eventClazz)) {
-						if (!this.listeners.containsKey(eventClazz)) {
-							this.listeners.put(eventClazz, new ArrayList<Method>());
-						}
-						
-						this.listeners.get(eventClazz).add(method);
-					} else {
-						// Warning here.
-					}
+					this.listeners.get(eventClazz).add(new EventEntry(handlerObject, method));
+				} else {
+					// Warning here.
 				}
 			}
-			
-			clazz = clazz.getSuperclass();
+		}
+	}
+	
+	/**
+	 * A read-only entry that stores a method to its matching object.
+	 * 
+	 * @author David Ma
+	 */
+	private class EventEntry {
+		
+		/**
+		 * The object in whose class the handlerMethod exists.
+		 */
+		private Object eventHandlerObject;
+		/**
+		 * The method to handle the event.
+		 */
+		private Method handlerMethod;
+		
+		/**
+		 * Creates an entry for events and match each method to its object.
+		 * 
+		 * @param eventHandlerObject The object in whose class the handlerMethod exists.
+		 * @param handlerMethod The method to handle the event.
+		 */
+		public EventEntry(Object eventHandlerObject, Method handlerMethod) {
+			this.eventHandlerObject = eventHandlerObject;
+			this.handlerMethod = handlerMethod;
+		}
+		
+		public Object getHandlerInstance() {
+			return this.eventHandlerObject;
+		}
+		
+		public Method getHandlerMethod() {
+			return this.handlerMethod;
 		}
 	}
 }
