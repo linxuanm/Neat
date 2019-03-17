@@ -1,12 +1,13 @@
 package cn.davidma.neat.event.handler;
 
 import java.awt.Event;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import cn.davidma.neat.event.events.EventBase;
 
@@ -53,6 +54,28 @@ public final class EventBus {
 					
 					this.listeners.get(eventClazz).add(new EventEntry(handlerObject, method));
 				} else {
+					// Warning here.
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Calls all event handlers for the given event.
+	 * 
+	 * @param eventClazz The event whose handlers are to be called.
+	 */
+	public void trigger(Class<?> eventClazz) {
+		if (!EventBase.class.isAssignableFrom(eventClazz)) {
+			throw new InvalidParameterException("The event to be triggered does not inherit EventBase.");
+		}
+		
+		if (this.listeners.containsKey(eventClazz)) {
+			List<EventEntry> eventEntries = this.listeners.get(eventClazz);
+			for (EventEntry i: eventEntries) {
+				try {
+					i.getHandlerMethod().invoke(i.getHandlerInstance());
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					// Warning here.
 				}
 			}
