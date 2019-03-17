@@ -39,14 +39,14 @@ import javafx.stage.Stage;
  * <p>Here is an example that creates a simple game window:</p>
  * <pre><code>
 public class ExampleGame extends NeatGame {
-	public static void main(String[] args) {
-		setWindowConfiguration(game -> {
-			game.setTitle("My Game");
-			game.setSize(1000, 200);
-			game.setBackgroundColor("#000000");
-		});
-		
+	public static void main(String[] args) {		
 		launch(args);
+	}
+	
+	protected void setup() {
+		this.setTitle("My Game");
+		this.setSize(1000, 200);
+		this.setBackgroundColor("#000000");
 	}
 }
  * </code></pre>
@@ -67,22 +67,9 @@ public abstract class NeatGame extends Application {
 	 * The background color of the game window.
 	 */
 	private Color backgroundColor;
-	/**
-	 * The setup method of this instance. Set the value through {@link #setWindowConfiguration(Consumer)}.
-	 */
-	private static Consumer<NeatGame> windowConfiguration;
 	
 	private Group group;
 	private Scene scene;
-	
-	/**
-	 * Sets the configuration function of the game window.
-	 * 
-	 * @param windowConfiguration A {@link java.util.function.Consumer} that invokes setup methods on this class.
-	 */
-	protected static void setWindowConfiguration(Consumer<NeatGame> windowConfiguration) {
-		NeatGame.windowConfiguration = windowConfiguration;
-	}
 	
 	/**
 	 * Sets the size for the game window.
@@ -141,7 +128,7 @@ public abstract class NeatGame extends Application {
 	 */
 	@Override
 	public final void start(Stage stage) throws Exception {
-		if (windowConfiguration != null) windowConfiguration.accept(this);
+		this.setup();
 		
 		Pane root = new Pane();
 		root.getChildren().add(group = new Group());
@@ -151,5 +138,13 @@ public abstract class NeatGame extends Application {
 		stage.setTitle(this.title);
 		stage.setResizable(false);
 		stage.show();
+	}
+	
+	/**
+	 * Sets up all the configurations of the game.
+	 * Should be overridden, but not mandatory.
+	 */
+	protected void setup() {
+		
 	}
 }
