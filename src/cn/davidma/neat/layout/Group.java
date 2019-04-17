@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import cn.davidma.neat.capability.IMovable;
+import cn.davidma.neat.capability.IRelative;
 
 /**
  * A group can allpy certain actions to all of its children.
@@ -34,29 +34,27 @@ import cn.davidma.neat.capability.IMovable;
  * 
  * @author David Ma
  */
-public class Group extends LayoutObject implements IParent, IMovable {
-
-	private List<LayoutObject> children;
+public class Group extends LayoutObject implements IParent<IRelative>, IRelative {
+	
+	private List<IRelative> children;
 	
 	public Group() {
-		children = new ArrayList<LayoutObject>();
+		children = new ArrayList<IRelative>();
 	}
 	
 	@Override
-	public void addChild(LayoutObject layoutObject) {
-		children.add(layoutObject);
+	public void addChild(IRelative iRelative) {
+		children.add(iRelative);
 	}
 
 	@Override
-	public List<LayoutObject> getChildren() {
+	public List<IRelative> getChildren() {
 		return children;
 	}
 
 	@Override
-	public void mapChildren(Consumer<LayoutObject> operation) {
-		for (LayoutObject i: this.children) {
-			operation.accept(i);
-		}
+	public void mapChildren(Consumer<IRelative> operation) {
+		this.children.forEach(operation);
 	}
 
 	@Override
@@ -71,37 +69,41 @@ public class Group extends LayoutObject implements IParent, IMovable {
 
 	@Override
 	public void moveX(int xOffset) {
-		// TODO Auto-generated method stub
-		
+		this.mapChildren((IRelative i) -> i.moveX(xOffset));
 	}
 
 	@Override
 	public void moveY(int yOffset) {
-		// TODO Auto-generated method stub
-		
+		this.mapChildren((IRelative i) -> i.moveY(yOffset));
 	}
 
 	@Override
 	public void rotate(double angle) {
-		// TODO Auto-generated method stub
-		
+		this.mapChildren((IRelative i) -> i.rotate(angle));
 	}
 
 	@Override
 	public void rotate(double angle, int x, int y) {
-		// TODO Auto-generated method stub
-		
+		this.mapChildren((IRelative i) -> i.rotate(angle, x, y));
 	}
 
 	@Override
-	public void scale(double scale) {
-		// TODO Auto-generated method stub
-		
+	public void enlarge(double amount) {
+		this.mapChildren((IRelative i) -> i.enlarge(amount));
 	}
 
 	@Override
-	public void scale(double scale, int x, int y) {
-		// TODO Auto-generated method stub
-		
+	public void enlarge(double amount, int x, int y) {
+		this.mapChildren((IRelative i) -> i.rotate(amount, x, y));
+	}
+
+	@Override
+	public void hide() {
+		this.mapChildren((IRelative i) -> i.hide());
+	}
+
+	@Override
+	public void show() {
+		this.mapChildren((IRelative i) -> i.show());
 	}
 }

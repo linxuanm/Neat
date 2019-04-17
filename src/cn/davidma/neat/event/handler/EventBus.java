@@ -1,6 +1,5 @@
 package cn.davidma.neat.event.handler;
 
-import java.awt.Event;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.InvalidParameterException;
@@ -19,7 +18,7 @@ import cn.davidma.neat.event.events.EventBase;
  * @author David Ma
  */
 public final class EventBus {
-
+	
 	/**
 	 * A map that maps all event listeners to their respective events.
 	 */

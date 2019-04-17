@@ -6,5 +6,5 @@ package cn.davidma.neat.layout;
  * @author David Ma
  */
 public abstract class LayoutObject {
-
+	
 }

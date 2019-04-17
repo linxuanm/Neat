@@ -8,28 +8,28 @@ import java.util.function.Consumer;
  * 
  * @author David Ma
  */
-public interface IParent {
-
+public interface IParent<T> {
+	
 	/**
 	 * Adds a child to the parent.
 	 * 
 	 * @param layoutObject The object to be added as a child.
 	 */
-	public void addChild(LayoutObject layoutObject);
+	public void addChild(T layoutObject);
 	
 	/**
 	 * Gets the children.
 	 * 
 	 * @return A list of children.
 	 */
-	public List<LayoutObject> getChildren();
+	public List<T> getChildren();
 	
 	/**
 	 * Invokes the consumer with each children.
 	 * 
-	 * @param operation The consumer too be invoked on each children.
+	 * @param operation The consumer to be invoked on each children.
 	 */
-	public void mapChildren(Consumer<LayoutObject> operation);
+	public void mapChildren(Consumer<T> operation);
 	
 	/**
 	 * Counts the children.

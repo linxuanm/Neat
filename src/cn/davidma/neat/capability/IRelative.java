@@ -6,31 +6,31 @@ package cn.davidma.neat.capability;
  * 
  * @author David Ma
  */
-public interface IMovable {
-
+public interface IRelative {
+	
 	/**
-	 * Move the object on the x axis.
+	 * Moves the object on the x axis.
 	 * 
 	 * @param xOffset Distance.
 	 */
 	public void moveX(int xOffset);
 	
 	/**
-	 * Move the object on the y axis.
+	 * Moves the object on the y axis.
 	 * 
 	 * @param yOffset Distance.
 	 */
 	public void moveY(int yOffset);
 	
 	/**
-	 * Rotate the object.
+	 * Rotates the object.
 	 * 
 	 * @param angle The angle of rotation (in radians).
 	 */
 	public void rotate(double angle);
 	
 	/**
-	 * Rotate the object.
+	 * Rotates the object.
 	 * 
 	 * @param angle The angle of rotation (in radians).
 	 * @param x The x axis of the center of rotation.
@@ -40,18 +40,28 @@ public interface IMovable {
 	
 	
 	/**
-	 * Scale the object.
+	 * Enlarges the object.
 	 * 
-	 * @param scale The amount to scale.
+	 * @param amount The amount to scale.
 	 */
-	public void scale(double scale);
+	public void enlarge(double amount);
 	
 	/**
-	 * Scale the object.
+	 * Enlarges the object.
 	 * 
 	 * @param scale The amount to scale.
 	 * @param x The x axis of the center of the resize.
 	 * @param y The y axis of the center of the resize.
 	 */
-	public void scale(double scale, int x, int y);
+	public void enlarge(double amount, int x, int y);
+	
+	/**
+	 * Hides the object.
+	 */
+	public void hide();
+	
+	/**
+	 * Shows the object.
+	 */
+	public void show();
 }

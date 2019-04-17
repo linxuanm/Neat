@@ -15,5 +15,5 @@ package cn.davidma.neat.event.events;
  * @author David Ma
  */
 public class EventBase {
-
+	
 }

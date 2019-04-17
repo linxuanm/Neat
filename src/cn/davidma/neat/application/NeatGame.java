@@ -1,7 +1,5 @@
 package cn.davidma.neat.application;
 
-import java.util.function.Consumer;
-
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -54,7 +52,7 @@ public class ExampleGame extends NeatGame {
  * @author David Ma
  */
 public abstract class NeatGame extends Application {
-
+	
 	/**
 	 * The dimension of the game window. Set the values through {@link #setSize(int, int)}.
 	 */
