@@ -41,8 +41,8 @@ public final class EventBus {
 				Class<?>[] parameterClazz = method.getParameterTypes();
 				
 				if (parameterClazz.length != 1) {
-					// Warning here.
-					continue;
+					throw new IllegalArgumentException("EventHandler " + handlerObject.getClass().getName() + "#"
+					+ method.getName() + " should have exactly one parameter specifying the event to subscribe to.");
 				}
 				
 				Class<?> eventClazz = parameterClazz[0];
@@ -53,7 +53,8 @@ public final class EventBus {
 					
 					this.listeners.get(eventClazz).add(new EventEntry(handlerObject, method));
 				} else {
-					// Warning here.
+					throw new IllegalArgumentException(handlerObject.getClass().getName() + "#" + method.getName()
+					+ " is annotated as an EventHandler, yet its parameter does not inherit EventBase.");
 				}
 			}
 		}
@@ -64,7 +65,9 @@ public final class EventBus {
 	 * 
 	 * @param eventClazz The event whose handlers are to be called.
 	 */
-	public void trigger(Class<?> eventClazz) {
+	public void trigger(EventBase event) {
+		Class<?> eventClazz = event.getClass();
+		
 		if (!EventBase.class.isAssignableFrom(eventClazz)) {
 			throw new InvalidParameterException("The event to be triggered does not inherit EventBase.");
 		}
@@ -73,7 +76,7 @@ public final class EventBus {
 			List<EventEntry> eventEntries = this.listeners.get(eventClazz);
 			for (EventEntry i: eventEntries) {
 				try {
-					i.getHandlerMethod().invoke(i.getHandlerInstance());
+					i.getHandlerMethod().invoke(i.getHandlerInstance(), event);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					// Warning here.
 				}

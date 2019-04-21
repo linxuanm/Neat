@@ -10,6 +10,7 @@ public class ExampleGame extends NeatGame {
 	
 	@Override
 	protected void setup() {
+		this.EVENT_BUS.register(new TestEventHandler());
 		this.setTitle("My Game");
 		this.setBackgroundColor("#7F7F7F");
 		this.setSize(100, 100);

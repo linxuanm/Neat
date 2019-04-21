@@ -40,6 +40,15 @@ public class Scene implements IParent<LayoutObject> {
 	}
 	
 	/**
+	 * Removes the object from the scene.
+	 * 
+	 * @param layoutObject The object to be removed.
+	 */
+	public void removeObject(LayoutObject layoutObject) {
+		this.removeObject(layoutObject.getId());
+	}
+	
+	/**
 	 * Generates an unique ID.
 	 * @return
 	 */

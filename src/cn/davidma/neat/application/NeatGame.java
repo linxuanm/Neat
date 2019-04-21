@@ -1,5 +1,8 @@
 package cn.davidma.neat.application;
 
+import java.util.logging.Logger;
+
+import cn.davidma.neat.event.handler.EventBus;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -65,6 +68,8 @@ public abstract class NeatGame extends Application {
 	 * The background color of the game window.
 	 */
 	private Color backgroundColor;
+	
+	public EventBus EVENT_BUS = new EventBus();
 	
 	private Group group;
 	private Scene scene;
