@@ -1,9 +1,11 @@
 package cn.davidma.neat.layout;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
+import cn.davidma.neat.capability.IParent;
 import cn.davidma.neat.capability.IRelative;
 
 /**
@@ -34,7 +36,7 @@ import cn.davidma.neat.capability.IRelative;
  * 
  * @author David Ma
  */
-public class Group extends LayoutObject implements IParent<IRelative>, IRelative {
+public class Group implements IParent<IRelative>, IRelative {
 	
 	private List<IRelative> children;
 	
@@ -105,5 +107,10 @@ public class Group extends LayoutObject implements IParent<IRelative>, IRelative
 	@Override
 	public void show() {
 		this.mapChildren((IRelative i) -> i.show());
+	}
+
+	@Override
+	public Iterator<IRelative> iterator() {
+		return this.children.iterator();
 	}
 }

@@ -1,4 +1,4 @@
-package cn.davidma.neat.layout;
+package cn.davidma.neat.capability;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -8,7 +8,7 @@ import java.util.function.Consumer;
  * 
  * @author David Ma
  */
-public interface IParent<T> {
+public interface IParent<T> extends Iterable<T> {
 	
 	/**
 	 * Adds a child to the parent.

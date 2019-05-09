@@ -2,6 +2,7 @@ package cn.davidma.neat.object;
 
 import cn.davidma.neat.capability.IRelative;
 import cn.davidma.neat.layout.LayoutObject;
+import cn.davidma.neat.util.StrUtil;
 
 /**
  * The basic object that is meant to be added in the game.
@@ -11,12 +12,35 @@ import cn.davidma.neat.layout.LayoutObject;
  */
 public abstract class GameObject extends LayoutObject implements IRelative {
 	
+	/**
+	 * The unique ID given to each LayoutObject;
+	 * this will be randomly assigned if left empty.
+	 */
+	private String id;
+	
 	private int x;
 	private int y;
 	private double rotation;
 	private double scale;
 	private double opacity;
 	private boolean showing;
+	
+	public String getId() {
+		return this.id;
+	}
+	
+	/**
+	 * Returns this for chaining purpose.
+	 */
+	public GameObject setId(String id) {
+		if (StrUtil.isEmpty(id)) {
+			this.id = id;
+		} else {
+			throw new UnsupportedOperationException("The ID of a LayoutObject can only be set once.");
+		}
+		
+		return this;
+	}
 	
 	public int getX() {
 		return this.x;

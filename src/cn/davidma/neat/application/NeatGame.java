@@ -1,14 +1,17 @@
 package cn.davidma.neat.application;
 
-import java.util.logging.Logger;
-
-import cn.davidma.neat.event.handler.EventBus;
+import cn.davidma.neat.layout.GameScene;
+import cn.davidma.neat.object.GameObject;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * The main application from which games extend.
@@ -68,9 +71,17 @@ public abstract class NeatGame extends Application {
 	 * The background color of the game window.
 	 */
 	private Color backgroundColor;
+	/**
+	 * The maximum delay between frames.
+	 */
+	private int delay = 20;
 	
-	public EventBus EVENT_BUS = new EventBus();
+	/**
+	 * The currently active GameScene.
+	 */
+	private GameScene gameScene;
 	
+	private Timeline timeline;
 	private Group group;
 	private Scene scene;
 	
@@ -127,10 +138,38 @@ public abstract class NeatGame extends Application {
 	}
 	
 	/**
+	 * Sets the delay between frames.
+	 * 
+	 * @param delay The delay between frames.
+	 * @return This instance.
+	 */
+	public NeatGame setDelay(int delay) {
+		this.delay = delay;
+		
+		return this;
+	}
+	
+	/**
+	 * Gets the currently active GameScene.
+	 * 
+	 * @return
+	 */
+	public GameScene getScene() {
+		return this.gameScene;
+	}
+	
+	public NeatGame setScene(GameScene gameScene) {
+		this.gameScene = gameScene;
+		
+		return this;
+	}
+	
+	/**
 	 * Internal method that launches the game.
 	 */
 	@Override
 	public final void start(Stage stage) throws Exception {
+		this.initialization();
 		this.setup();
 		
 		Pane root = new Pane();
@@ -144,10 +183,34 @@ public abstract class NeatGame extends Application {
 	}
 	
 	/**
+	 * Internal setups.
+	 */
+	private void initialization() {
+		this.timeline = new Timeline(new KeyFrame(Duration.millis(this.delay), event -> this.update()));
+		this.timeline.setCycleCount(Animation.INDEFINITE);
+	}
+	
+	/**
 	 * Sets up all the configurations of the game.
 	 * Should be overridden, but not mandatory.
 	 */
 	protected void setup() {
 		
+	}
+	
+	/**
+	 * Used internally for updating the screen.
+	 * 
+	 * <p>
+	 * This method can be overriden, in which case it
+	 * <b>must</b> be called as a super method.
+	 * </p>
+	 */
+	protected void update() {
+		if (this.scene != null) {
+			for (GameObject i: this.gameScene) {
+				
+			}
+		}
 	}
 }
