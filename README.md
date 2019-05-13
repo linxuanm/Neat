@@ -31,6 +31,7 @@ public class ExampleGame extends NeatGame {
 		launch(args);
 	}
 	
+	@Override
 	protected void setup() {
 		this.setTitle("My Game");
 		this.setSize(1000, 200);
@@ -38,3 +39,14 @@ public class ExampleGame extends NeatGame {
 	}
 }
 ```
+
+## Scene Managing
+To ease the managing of collections of objects, Neat has a scene managing system.
+
+A [GameScene](src/cn/davidma/neat/layout/GameScene.java) is a group of [SceneObjects](src/cn/davidma/neat/object/SceneObject.java).
+
+Each game can only have __one__ GameScene active at the same time, and each SceneObject can only belong to __one__ GameScene. The sole purpose of the GameScene system is to create a way to completely separate the logic of objects, such as a menu scene and a main game scene. For handling objects as collections, see [Group](#Group).
+
+When a scene is not active, all operations, including rendering, updating and callbacking, of its SceneObjects will be stopped.
+
+To make a GameScene active, call ```NeatGame#setScene```.

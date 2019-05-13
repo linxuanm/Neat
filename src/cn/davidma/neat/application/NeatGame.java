@@ -152,12 +152,18 @@ public abstract class NeatGame extends Application {
 	/**
 	 * Gets the currently active GameScene.
 	 * 
-	 * @return
+	 * @return The currently active GameScene.
 	 */
 	public GameScene getScene() {
 		return this.gameScene;
 	}
 	
+	/**
+	 * Sets the currently active GameScene.
+	 * 
+	 * @param gameScene The GameScene to be set to.
+	 * @return This instance.
+	 */
 	public NeatGame setScene(GameScene gameScene) {
 		this.gameScene = gameScene;
 		
