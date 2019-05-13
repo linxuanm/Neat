@@ -50,3 +50,6 @@ Each game can only have __one__ GameScene active at the same time, and each Scen
 When a scene is not active, all operations, including rendering, updating and callbacking, of its SceneObjects will be stopped.
 
 To make a GameScene active, call ```NeatGame#setScene```.
+
+## Group
+A [Group](src/cn/davidma/neat/layout/Group.java) is a collection of SceneObjects.
