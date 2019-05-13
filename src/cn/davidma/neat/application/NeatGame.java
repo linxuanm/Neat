@@ -1,7 +1,7 @@
 package cn.davidma.neat.application;
 
 import cn.davidma.neat.layout.GameScene;
-import cn.davidma.neat.object.GameObject;
+import cn.davidma.neat.object.SceneObject;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -20,7 +20,7 @@ import javafx.util.Duration;
  * 
  * <p>
  * The main program should extend this class. All setup
- * should be done in the  method. This class should
+ * should be done in the {@link #setup()} method. This class should
  * not be explicitly instantiated. The game is launched
  * with {@link #launch(String...)}.
  * </p>
@@ -208,7 +208,7 @@ public abstract class NeatGame extends Application {
 	 */
 	protected void update() {
 		if (this.scene != null) {
-			for (GameObject i: this.gameScene) {
+			for (SceneObject i: this.gameScene) {
 				
 			}
 		}
