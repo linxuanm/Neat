@@ -35,6 +35,7 @@ public class GameScene implements IParent<SceneObject> {
 	}
 	
 	/**
+	 * <b>This method should not be used.</b>
 	 * Removes the object with the given ID.
 	 * 
 	 * @param id The ID of the object to be removed.
@@ -44,6 +45,7 @@ public class GameScene implements IParent<SceneObject> {
 	}
 	
 	/**
+	 * <b>This method should not be used.</b>
 	 * Removes the object from the scene.
 	 * 
 	 * @param layoutObject The object to be removed.
@@ -67,6 +69,7 @@ public class GameScene implements IParent<SceneObject> {
 		}
 		
 		this.sceneObjs.put(sceneObject.getId(), sceneObject);
+		sceneObject.start();
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 package cn.davidma.neat.object;
 
 import cn.davidma.neat.capability.IRelative;
+import cn.davidma.neat.layout.GameScene;
 import cn.davidma.neat.layout.LayoutObject;
 import cn.davidma.neat.util.StrUtil;
 
@@ -17,13 +18,35 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	 * this will be randomly assigned if left empty.
 	 */
 	private String id;
+	private GameScene parentScene;
+	
+	/**
+	 * Whether this object's render should be recalculated next frame.
+	 */
+	protected boolean renderChanged;
 	
 	private int x;
 	private int y;
 	private double rotation;
-	private double scale;
-	private double opacity;
-	private boolean showing;
+	private double scaleX = 1;
+	private double scaleY = 1;
+	private double opacity = 1;
+	private boolean showing = true;
+	
+	/**
+	 * Called when the GameObject is first added to the scene.
+	 */
+	public abstract void start();
+	/**
+	 * Called every tick.
+	 */
+	public abstract void update();
+	/**
+	 * Renders the SceneObject.
+	 * 
+	 * @param screen The {@link javafx.scene.Group} to be rendered on.
+	 */
+	public abstract void render(javafx.scene.Group screen);
 	
 	public String getId() {
 		return this.id;
@@ -33,7 +56,7 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	 * Returns this for chaining purpose.
 	 */
 	public SceneObject setId(String id) {
-		if (StrUtil.isEmpty(id)) {
+		if (StrUtil.isEmpty(this.id)) {
 			this.id = id;
 		} else {
 			throw new UnsupportedOperationException("The ID of a SceneObject can only be set once.");
@@ -42,17 +65,41 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 		return this;
 	}
 	
+	/**
+	 * Called when a SceneObject is removed from the scene.
+	 */
+	public void clearId() {
+		this.id = "";
+	}
+	
+	public GameScene getParentScene() {
+		return this.parentScene;
+	}
+	
+	/**
+	 * Removes the SceneObject.
+	 */
+	public void removeFromScene() {
+		if (this.parentScene != null) {
+			this.parentScene.removeObject(this.id);
+			this.clearId();
+		}
+	}
+	
 	public int getX() {
 		return this.x;
 	}
 	
 	public void setX(int x) {
-		this.x = x;
+		if (x != this.x) {
+			this.x = x;
+			this.renderChanged = true;
+		}
 	}
 	
 	@Override
 	public void moveX(int xOffset) {
-		this.x += xOffset;
+		this.setX(this.x + xOffset);
 	}
 	
 	public int getY() {
@@ -60,12 +107,15 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	}
 	
 	public void setY(int y) {
-		this.y = y;
+		if (y != this.y) {
+			this.y = y;
+			this.renderChanged = true;
+		}
 	}
 
 	@Override
 	public void moveY(int yOffset) {
-		this.y += yOffset;
+		this.setY(this.y + yOffset);
 	}
 	
 	public double getRotation() {
@@ -73,12 +123,15 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	}
 	
 	public void setRotation(double rotation) {
-		this.rotation = rotation;
+		if (rotation != this.rotation) {
+			this.rotation = rotation;
+			this.renderChanged = true;
+		}
 	}
 
 	@Override
 	public void rotate(double angle) {
-		this.rotation += angle;
+		this.setRotation(this.rotation + angle);
 	}
 
 	@Override
@@ -88,25 +141,39 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 		
 	}
 	
-	public double getScale() {
-		return this.scale;
+	public double getScaleX() {
+		return this.scaleX;
 	}
 	
-	public void setScale(double scale) {
-		this.scale = scale;
+	public void setScaleX(double scaleX) {
+		if (scaleX != this.scaleX) {
+			this.scaleX = scaleX;
+			this.renderChanged = true;
+		}
+	}
+	
+	public double getScaleY() {
+		return this.scaleY;
+	}
+	
+	public void setScaleY(double scaleY) {
+		if (scaleY != this.scaleY) {
+			this.scaleY = scaleY;
+			this.renderChanged = true;
+		}
 	}
 
 	@Override
 	public void enlarge(double amount) {
-		this.scale += amount;
+		this.setScaleX(this.scaleX * amount);
+		this.setScaleY(this.scaleY * amount);
 	}
 
 	@Override
 	public void enlarge(double amount, int x, int y) {
 		this.enlarge(amount);
-		
-		this.x -= (x - this.x) * amount;
-		this.y -= (y - this.y) * amount;
+		this.setX((int) (this.x - (x - this.x) * amount));
+		this.setY((int) (this.y - (y - this.y) * amount));
 	}
 	
 	public double getOpacity() {
@@ -114,7 +181,10 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	}
 	
 	public void setOpacity(double opacity) {
-		this.opacity = opacity;
+		if (opacity != this.opacity) {
+			this.opacity = opacity;
+			this.renderChanged = true;
+		}
 	}
 	
 	public boolean isVisible() {
@@ -123,11 +193,17 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 
 	@Override
 	public void hide() {
-		this.showing = false;
+		if (this.showing) {
+			this.showing = false;
+			this.renderChanged = true;
+		}
 	}
 
 	@Override
 	public void show() {
-		this.showing = true;
+		if (!this.showing) {
+			this.showing = true;
+			this.renderChanged = true;
+		}
 	}
 }

@@ -1,13 +1,14 @@
 package cn.davidma.neat.application;
 
+import java.awt.RenderingHints.Key;
+
 import cn.davidma.neat.layout.GameScene;
-import cn.davidma.neat.object.SceneObject;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -59,6 +60,8 @@ public class ExampleGame extends NeatGame {
  */
 public abstract class NeatGame extends Application {
 	
+	private static NeatGame instance;
+	
 	/**
 	 * The dimension of the game window. Set the values through {@link #setSize(int, int)}.
 	 */
@@ -82,8 +85,43 @@ public abstract class NeatGame extends Application {
 	private GameScene gameScene;
 	
 	private Timeline timeline;
-	private Group group;
+	private javafx.scene.Group group;
 	private Scene scene;
+	
+	public NeatGame() {
+		super();
+		instance = this;
+	}
+	
+	/**
+	 * Gets the currently active NeatGame.
+	 */
+	public static NeatGame getInstance() {
+		return instance;
+	}
+	
+	/**
+	 * Allows the user to set up the scene when the game starts.
+	 */
+	protected abstract void gameStart();
+	
+	/**
+	 * Gets the width of the window.
+	 * 
+	 * @return The width of the window.
+	 */
+	public int getWidth() {
+		return this.width;
+	}
+	
+	/**
+	 * Gets the height of the window.
+	 * 
+	 * @return The height of the window.
+	 */
+	public int getHeight() {
+		return this.height;
+	}
 	
 	/**
 	 * Sets the size for the game window.
@@ -175,30 +213,45 @@ public abstract class NeatGame extends Application {
 	 */
 	@Override
 	public final void start(Stage stage) throws Exception {
-		this.initialization();
+		this.internalInitialization();
 		this.setup();
 		
 		Pane root = new Pane();
-		root.getChildren().add(group = new Group());
+		root.getChildren().add(group = new javafx.scene.Group());
 		this.scene = new Scene(root, this.width, this.height, this.backgroundColor);
+		
+		this.scene.addEventHandler(KeyEvent.KEY_PRESSED, key -> {
+			InputHandler.setKeyDown(key.getCode().toString());
+		});
+		
+		this.scene.addEventHandler(KeyEvent.KEY_RELEASED, key -> {
+			InputHandler.setKeyUp(key.getCode().toString());
+		});
 		
 		stage.setScene(this.scene);
 		stage.setTitle(this.title);
 		stage.setResizable(false);
 		stage.show();
+		
+		this.timeline.play();
+		
+		this.gameStart();
 	}
 	
 	/**
 	 * Internal setups.
 	 */
-	private void initialization() {
+	private final void internalInitialization() {
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(this.delay), event -> this.update()));
 		this.timeline.setCycleCount(Animation.INDEFINITE);
 	}
 	
 	/**
-	 * Sets up all the configurations of the game.
+	 * Sets up all the configurations of the game window.
+	 * 
+	 * <p>
 	 * Should be overridden, but not mandatory.
+	 * </p>
 	 */
 	protected void setup() {
 		
@@ -213,10 +266,14 @@ public abstract class NeatGame extends Application {
 	 * </p>
 	 */
 	protected void update() {
-		if (this.scene != null) {
-			for (SceneObject i: this.gameScene) {
-				
-			}
+		if (this.gameScene != null) {
+			this.gameScene.forEach(sceneObject -> {
+				sceneObject.update();
+			});
+			this.group.getChildren().clear();
+			this.gameScene.forEach(sceneObject -> {
+				sceneObject.render(this.group);
+			});
 		}
 	}
 }
