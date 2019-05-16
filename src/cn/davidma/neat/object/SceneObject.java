@@ -1,9 +1,11 @@
 package cn.davidma.neat.object;
 
+import cn.davidma.neat.application.InputHandler;
 import cn.davidma.neat.capability.IRelative;
 import cn.davidma.neat.layout.GameScene;
 import cn.davidma.neat.layout.LayoutObject;
 import cn.davidma.neat.util.StrUtil;
+import javafx.scene.Node;
 
 /**
  * The basic object that is meant to be added in the game.
@@ -43,10 +45,21 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	public abstract void update();
 	/**
 	 * Renders the SceneObject.
-	 * 
-	 * @param screen The {@link javafx.scene.Group} to be rendered on.
 	 */
-	public abstract void render(javafx.scene.Group screen);
+	public abstract void render();
+	/**
+	 * Gets the initial Node to be added to {@link javafx.scene.Scene}.
+	 * 
+	 * @return The Node to be added to {@link javafx.scene.Scene}.
+	 */
+	public abstract Node getRenderNode();
+	
+	/**
+	 * Called when the SceneObject is clicked.
+	 */
+	public void onClick(InputHandler.MouseEvent mouseEvent) {
+		
+	}
 	
 	public String getId() {
 		return this.id;

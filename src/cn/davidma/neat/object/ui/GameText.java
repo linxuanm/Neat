@@ -1,6 +1,7 @@
 package cn.davidma.neat.object.ui;
 
 import cn.davidma.neat.object.SceneObject;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -9,17 +10,31 @@ public class GameText extends SceneObject {
 	private String text;
 	private double size;
 	private String font;
+	private Color color;
 	private Text renderCache;
 	
 	public GameText() {
 		this.text = "";
 		this.font = "Courier";
 		this.size = 10;
+		this.color = Color.BLACK;
+		this.renderCache = new Text();
+		this.renderChanged = true;
 	}
 	
 	public GameText(String text) {
 		this();
 		this.text = text;
+	}
+	
+	public void setColor(String color) {
+		this.color = Color.web(color);
+		this.renderChanged = true;
+	}
+	
+	public void setColor(int r, int g, int b) {
+		this.color = Color.rgb(r, g, b);
+		this.renderChanged = true;
 	}
 	
 	public double getSize() {
@@ -66,20 +81,43 @@ public class GameText extends SceneObject {
 	}
 
 	@Override
-	public void render(javafx.scene.Group screen) {
+	public void render() {
 		if (this.isVisible()) {
-			if (this.renderChanged || this.renderCache == null) {
-				Text render = new Text(this.text);
-				render.setFont(new Font(this.font, this.size));
-				render.setX(this.getX());
-				render.setY(this.getY());
-				render.setRotate(this.getRotation());
-				render.setOpacity(this.getOpacity());
+			if (this.renderChanged) {
+				this.renderCache.setText(this.text);
+				this.renderCache.setFont(new Font(this.font, this.size));
+				this.renderCache.setFill(this.color);
+				this.renderCache.setX(this.getX() - this.getScaleX() / 2);
 				
-				this.renderCache = render;
+				// Opposite because text's pivot is at the bottom.
+				this.renderCache.setY(this.getY() + this.getScaleY() / 2);
+				
+				this.renderCache.setRotate(this.getRotation());
+				this.renderCache.setOpacity(this.getOpacity());
+				
 				this.renderChanged = false;
 			}
-			screen.getChildren().add(this.renderCache);
 		}
+	}
+	
+	/**
+	 * Returns the width of the text.
+	 */
+	@Override
+	public double getScaleX() {
+		return this.renderCache.getLayoutBounds().getWidth();
+	}
+	
+	/**
+	 * Returns the height of the text.
+	 */
+	@Override
+	public double getScaleY() {
+		return this.renderCache.getLayoutBounds().getHeight();
+	}
+
+	@Override
+	public Text getRenderNode() {
+		return this.renderCache;
 	}
 }

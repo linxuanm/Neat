@@ -1,5 +1,6 @@
 package cn.davidma.neat.object;
 
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -7,6 +8,11 @@ public abstract class GameObject extends SceneObject {
 	
 	private Image image;
 	private ImageView renderCache;
+	
+	public GameObject() {
+		this.renderCache = new ImageView();
+		this.renderChanged = true;
+	}
 	
 	/**
 	 * Sets the image of the GameObject.
@@ -19,24 +25,36 @@ public abstract class GameObject extends SceneObject {
 	}
 	
 	@Override
-	public void render(javafx.scene.Group screen) {
+	public void render() {
 		if (this.isVisible() && this.image != null) {
-			if (this.renderChanged || this.renderCache == null) {
+			if (this.renderChanged) {
 				double targetWidth = image.getWidth() * this.getScaleX();
 				double targetHeight = image.getHeight() * this.getScaleY();
 				
-				ImageView render = new ImageView(this.image);
-				render.setFitWidth(targetWidth);
-				render.setFitHeight(targetHeight);
-				render.setX(this.getX() - targetWidth / 2);
-				render.setY(this.getY() - targetHeight / 2);
-				render.setRotate(this.getRotation());
-				render.setOpacity(this.getOpacity());
-				
-				this.renderCache = render;
+				this.renderCache.setImage(this.image);
+				this.renderCache.setFitWidth(targetWidth);
+				this.renderCache.setFitHeight(targetHeight);
+				this.renderCache.setX(this.getX() - targetWidth / 2);
+				this.renderCache.setY(this.getY() - targetHeight / 2);
+				this.renderCache.setRotate(this.getRotation());
+				this.renderCache.setOpacity(this.getOpacity());
 				this.renderChanged = false;
 			}
-			screen.getChildren().add(this.renderCache);
 		}
+	}
+	
+	@Override
+	public ImageView getRenderNode() {
+		return this.renderCache;
+	}
+	
+	/**
+	 * Sets the color adjust of the ImageView of this GameObject.
+	 * 
+	 * @param colorAdjust The color adjust to be set.
+	 */
+	public void setColorEffect(ColorAdjust colorAdjust) {
+		this.renderCache.setEffect(colorAdjust);
+		this.renderChanged = true;
 	}
 }

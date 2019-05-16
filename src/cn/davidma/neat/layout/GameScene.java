@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import cn.davidma.neat.application.NeatGame;
 import cn.davidma.neat.capability.IParent;
 import cn.davidma.neat.capability.IRelative;
 import cn.davidma.neat.object.SceneObject;
@@ -41,7 +42,7 @@ public class GameScene implements IParent<SceneObject> {
 	 * @param id The ID of the object to be removed.
 	 */
 	public void removeObject(String id) {
-		this.sceneObjs.remove(id);
+		this.removeObject(this.sceneObjs.get(id));
 	}
 	
 	/**
@@ -52,6 +53,11 @@ public class GameScene implements IParent<SceneObject> {
 	 */
 	public void removeObject(SceneObject sceneObject) {
 		this.removeObject(sceneObject.getId());
+		
+		NeatGame instance = NeatGame.getInstance();
+		if (instance.getScene() == this) {
+			instance.clickMap.remove(sceneObject.getRenderNode());
+		}
 	}
 	
 	/**
@@ -66,6 +72,12 @@ public class GameScene implements IParent<SceneObject> {
 	public void addChild(SceneObject sceneObject) {
 		if (StrUtil.isEmpty(sceneObject.getId())) {
 			sceneObject.setId(this.genId());
+		}
+		
+		NeatGame instance = NeatGame.getInstance();
+		if (instance.getScene() == this) {
+			instance.getGroup().getChildren().add(sceneObject.getRenderNode());
+			instance.clickMap.put(sceneObject.getRenderNode(), sceneObject);
 		}
 		
 		this.sceneObjs.put(sceneObject.getId(), sceneObject);
