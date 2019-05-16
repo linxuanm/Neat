@@ -52,10 +52,9 @@ public class GameScene implements IParent<SceneObject> {
 	 * @param layoutObject The object to be removed.
 	 */
 	public void removeObject(SceneObject sceneObject) {
-		this.removeObject(sceneObject.getId());
-		
 		NeatGame instance = NeatGame.getInstance();
 		if (instance.getScene() == this) {
+			instance.getGroup().getChildren().remove(sceneObject.getRenderNode());
 			instance.clickMap.remove(sceneObject.getRenderNode());
 		}
 	}
@@ -81,6 +80,7 @@ public class GameScene implements IParent<SceneObject> {
 		}
 		
 		this.sceneObjs.put(sceneObject.getId(), sceneObject);
+		sceneObject.addToScene(this);
 		sceneObject.start();
 	}
 	

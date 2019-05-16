@@ -13,7 +13,6 @@ public class Mine extends GameObject {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		
 	}
 }

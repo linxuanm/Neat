@@ -1,17 +1,20 @@
 package test;
 
+import java.util.List;
+
 import cn.davidma.neat.application.NeatGame;
 import cn.davidma.neat.layout.GameScene;
 import cn.davidma.neat.object.GameObject;
 import cn.davidma.neat.object.ui.GameText;
+import test.Generation.BlockPos;
 
 public class Minesweeper extends NeatGame {
 	
 	public static final int WINDOW_SIZE = 800;
-	public static final int FIELD_WIDTH = 100;
-	public static final int FIELD_HEIGHT = 100;
+	public static final int FIELD_WIDTH = 10;
+	public static final int FIELD_HEIGHT = 10;
 	public static final int CELL_SIZE = WINDOW_SIZE / Math.max(FIELD_WIDTH, FIELD_HEIGHT);
-	public static final int MINE_COUNT = 5000;
+	public static final int MINE_COUNT = 10;
 	public static final int[][] DIR = new int[][] {
 		{-1, -1},
 		{-1, 0},
@@ -24,7 +27,8 @@ public class Minesweeper extends NeatGame {
 		{1, 1}
 	};
 	
-	private static int[][] field;
+	public static int[][] field;
+	public static List<BlockPos> mines;
 	
 	public GameScene mainScene;
 	
@@ -44,6 +48,7 @@ public class Minesweeper extends NeatGame {
 		this.mainScene = new GameScene();
 		this.setScene(this.mainScene);
 		
+		// Generate background.
 		for (int i = 0; i < FIELD_HEIGHT; i++) {
 			for (int j = 0; j < FIELD_WIDTH; j++) {
 				GameObject background = new BackgroundBlock((j + i) % 2 == 0);
@@ -53,10 +58,11 @@ public class Minesweeper extends NeatGame {
 			}
 		}
 		
+		// Generate mines.
 		field = new int[FIELD_WIDTH][FIELD_HEIGHT];
-		Generation.genMines(FIELD_WIDTH, FIELD_HEIGHT, MINE_COUNT).forEach(mine -> {
+		mines = Generation.genMines(FIELD_WIDTH, FIELD_HEIGHT, MINE_COUNT);
+		mines.forEach(mine -> {
 			field[mine.x][mine.y] = -1;
-			
 			for (int[] i: DIR) {
 				int newX = mine.x + i[0];
 				int newY = mine.y + i[1];
@@ -68,6 +74,7 @@ public class Minesweeper extends NeatGame {
 			}
 		});
 		
+		// Generate numbers.
 		for (int i = 0; i < FIELD_HEIGHT; i++) {
 			for (int j = 0; j < FIELD_WIDTH; j++) {
 				int flag = field[j][i];
@@ -82,6 +89,17 @@ public class Minesweeper extends NeatGame {
 					mine.setY(CELL_SIZE / 2 + i * CELL_SIZE + 70);
 					this.mainScene.addChild(mine);
 				}
+			}
+		}
+		
+		// Generate grass.
+		for (int i = 0; i < FIELD_HEIGHT; i++) {
+			for (int j = 0; j < FIELD_WIDTH; j++) {
+				GameObject grass = new GrassBlock((j + i) % 2 == 0);
+				grass.setX(CELL_SIZE / 2 + j * CELL_SIZE);
+				grass.setY(CELL_SIZE / 2 + i * CELL_SIZE + 70);
+				grass.setId(String.format("grass_%d_%d", j, i));
+				this.mainScene.addChild(grass);
 			}
 		}
 	}

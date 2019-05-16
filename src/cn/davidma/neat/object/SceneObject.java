@@ -61,6 +61,20 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 		
 	}
 	
+	/**
+	 * Called when the mouse move to this object.
+	 */
+	public void onMouseEnter() {
+		
+	}
+	
+	/**
+	 * Called when the mouse leave this object.
+	 */
+	public void onMouseExit() {
+		
+	}
+	
 	public String getId() {
 		return this.id;
 	}
@@ -87,6 +101,13 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	
 	public GameScene getParentScene() {
 		return this.parentScene;
+	}
+	
+	/**
+	 * Called when this SceneObject is added to a scene.
+	 */
+	public void addToScene(GameScene parentScene) {
+		this.parentScene = parentScene;
 	}
 	
 	/**

@@ -11,6 +11,8 @@ public abstract class GameObject extends SceneObject {
 	
 	public GameObject() {
 		this.renderCache = new ImageView();
+		this.renderCache.setOnMouseEntered(event -> this.onMouseEnter());
+		this.renderCache.setOnMouseExited(event -> this.onMouseExit());
 		this.renderChanged = true;
 	}
 	

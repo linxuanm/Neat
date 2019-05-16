@@ -20,6 +20,8 @@ public class GameText extends SceneObject {
 		this.color = Color.BLACK;
 		this.renderCache = new Text();
 		this.renderChanged = true;
+		this.renderCache.setOnMouseEntered(event -> this.onMouseEnter());
+		this.renderCache.setOnMouseExited(event -> this.onMouseExit());
 	}
 	
 	public GameText(String text) {
