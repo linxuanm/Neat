@@ -1,20 +1,22 @@
 package test;
 
 import cn.davidma.neat.application.InputHandler.MouseEvent;
+import cn.davidma.neat.application.InputHandler.MouseKey;
 import cn.davidma.neat.object.GameObject;
 import cn.davidma.neat.util.MathUtil;
 import javafx.scene.effect.ColorAdjust;
 
 public class GrassBlock extends GameObject {
 	
+	public static final int FALL_LENGTH = 40;
 	private static final ColorAdjust DARK = MathUtil.convColorAdjust(85, 45, 34, 1);
 	private static final ColorAdjust LIGHT = MathUtil.convColorAdjust(85, 45, 36, 1);
 	private static final ColorAdjust HOVER = MathUtil.convColorAdjust(85, 45, 38, 1);
-	private static final int FALL_LENGTH = 40;
 	
 	private int x;
 	private int y;
 	private boolean dark;
+	private Flag flag;
 	
 	// Used for fall off aimation.
 	private int falling;
@@ -52,7 +54,19 @@ public class GrassBlock extends GameObject {
 	
 	@Override
 	public void onClick(MouseEvent mouseEvent) {
-		Minesweeper.processClick(this.x, this.y);
+		if (mouseEvent.mouseKey == MouseKey.LEFT) {
+			Minesweeper.processClick(this.x, this.y);
+		} else {
+			if (this.flag == null) {
+				this.flag = new Flag();
+				this.flag.setX(this.getX());
+				this.flag.setY(this.getY());
+				this.getParentScene().addChild(flag);
+			} else {
+				this.flag.setClick();
+				this.flag = null;
+			}
+		}
 	}
 	
 	@Override
@@ -67,6 +81,7 @@ public class GrassBlock extends GameObject {
 	
 	public void setClick() {
 		this.bringToFront();
+		if (this.flag != null) this.flag.setClick();
 		this.falling = FALL_LENGTH;
 		int force = Minesweeper.rand.nextInt(6);
 		this.horizontal = force - 3;
