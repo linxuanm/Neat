@@ -1,5 +1,6 @@
 package test;
 
+import cn.davidma.neat.application.InputHandler;
 import cn.davidma.neat.application.InputHandler.MouseEvent;
 import cn.davidma.neat.application.InputHandler.MouseKey;
 import cn.davidma.neat.object.GameObject;
@@ -54,17 +55,26 @@ public class GrassBlock extends GameObject {
 	
 	@Override
 	public void onClick(MouseEvent mouseEvent) {
-		if (mouseEvent.mouseKey == MouseKey.LEFT) {
-			Minesweeper.processClick(this.x, this.y);
+		if (falling != -1) return;
+		
+		if (mouseEvent.mouseKey == MouseKey.LEFT && !InputHandler.isKeyDown("SHIFT")) {
+			if (this.flag == null) Minesweeper.processClick(this.x, this.y);
 		} else {
 			if (this.flag == null) {
-				this.flag = new Flag();
-				this.flag.setX(this.getX());
-				this.flag.setY(this.getY());
-				this.getParentScene().addChild(flag);
+				if (Minesweeper.flagLeft > 0) {
+					this.flag = new Flag();
+					this.flag.setX(this.getX());
+					this.flag.setY(this.getY());
+					this.getParentScene().addChild(flag);
+					Minesweeper.all.addChild(flag);
+					Minesweeper.flagLeft--;
+					Minesweeper.updateFlagText();
+				}
 			} else {
 				this.flag.setClick();
 				this.flag = null;
+				Minesweeper.flagLeft++;
+				Minesweeper.updateFlagText();
 			}
 		}
 	}

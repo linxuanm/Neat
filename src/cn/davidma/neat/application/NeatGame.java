@@ -167,7 +167,7 @@ public abstract class NeatGame extends Application {
 	 * @return This instance.
 	 */
 	public NeatGame setBackgroundColor(int red, int green, int blue) {
-		this.backgroundColor = new Color(red, green, blue, 1);
+		this.backgroundColor = new Color(red / 255D, green / 255D, blue / 255D, 1);
 		
 		return this;
 	}

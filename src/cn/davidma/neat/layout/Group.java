@@ -39,9 +39,27 @@ import cn.davidma.neat.capability.IRelative;
 public class Group implements IParent<IRelative>, IRelative {
 	
 	private List<IRelative> children;
+	private int x;
+	private int y;
+	private double rotation;
 	
 	public Group() {
 		children = new ArrayList<IRelative>();
+	}
+	
+	public void setX(int x) {
+		int deltaX = x - this.x;
+		this.moveX(deltaX);
+	}
+	
+	public void setY(int y) {
+		int deltaY = y - this.y;
+		this.moveY(deltaY);
+	}
+	
+	public void setRotation(double rotation) {
+		double deltaRot = rotation - this.rotation;
+		this.rotate(deltaRot);
 	}
 	
 	@Override
@@ -72,21 +90,25 @@ public class Group implements IParent<IRelative>, IRelative {
 	@Override
 	public void moveX(int xOffset) {
 		this.mapChildren((IRelative i) -> i.moveX(xOffset));
+		this.x += xOffset;
 	}
 
 	@Override
 	public void moveY(int yOffset) {
 		this.mapChildren((IRelative i) -> i.moveY(yOffset));
+		this.y += yOffset;
 	}
 
 	@Override
 	public void rotate(double angle) {
 		this.mapChildren((IRelative i) -> i.rotate(angle));
+		this.rotation += angle;
 	}
 
 	@Override
 	public void rotate(double angle, int x, int y) {
 		this.mapChildren((IRelative i) -> i.rotate(angle, x, y));
+		this.rotation += angle;
 	}
 
 	@Override
@@ -96,7 +118,7 @@ public class Group implements IParent<IRelative>, IRelative {
 
 	@Override
 	public void enlarge(double amount, int x, int y) {
-		this.mapChildren((IRelative i) -> i.rotate(amount, x, y));
+		this.mapChildren((IRelative i) -> i.enlarge(amount, x, y));
 	}
 
 	@Override
