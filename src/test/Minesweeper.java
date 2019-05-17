@@ -1,12 +1,13 @@
 package test;
 
 import java.util.List;
+import java.util.Random;
 
 import cn.davidma.neat.application.NeatGame;
 import cn.davidma.neat.layout.GameScene;
 import cn.davidma.neat.object.GameObject;
 import cn.davidma.neat.object.ui.GameText;
-import test.Generation.BlockPos;
+import test.BlockLogic.BlockPos;
 
 public class Minesweeper extends NeatGame {
 	
@@ -27,10 +28,12 @@ public class Minesweeper extends NeatGame {
 		{1, 1}
 	};
 	
-	public static int[][] field;
-	public static List<BlockPos> mines;
-	
-	public GameScene mainScene;
+	public static Random rand;
+	private static GameScene mainScene;
+	private static int[][] field;
+	private static BlockState[][] state;
+	private static List<BlockPos> mines;
+	private static GrassBlock[] grassBlocks;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -45,8 +48,9 @@ public class Minesweeper extends NeatGame {
 
 	@Override
 	protected void gameStart() {
-		this.mainScene = new GameScene();
-		this.setScene(this.mainScene);
+		mainScene = new GameScene();
+		setScene(mainScene);
+		rand = new Random();
 		
 		// Generate background.
 		for (int i = 0; i < FIELD_HEIGHT; i++) {
@@ -54,13 +58,14 @@ public class Minesweeper extends NeatGame {
 				GameObject background = new BackgroundBlock((j + i) % 2 == 0);
 				background.setX(CELL_SIZE / 2 + j * CELL_SIZE);
 				background.setY(CELL_SIZE / 2 + i * CELL_SIZE + 70);
-				this.mainScene.addChild(background);
+				mainScene.addChild(background);
 			}
 		}
 		
 		// Generate mines.
 		field = new int[FIELD_WIDTH][FIELD_HEIGHT];
-		mines = Generation.genMines(FIELD_WIDTH, FIELD_HEIGHT, MINE_COUNT);
+		state = new BlockState[FIELD_WIDTH][FIELD_HEIGHT];
+		mines = BlockLogic.genMines(FIELD_WIDTH, FIELD_HEIGHT, MINE_COUNT);
 		mines.forEach(mine -> {
 			field[mine.x][mine.y] = -1;
 			for (int[] i: DIR) {
@@ -82,25 +87,37 @@ public class Minesweeper extends NeatGame {
 					GameText text = TextBuilder.getText(flag);
 					text.setX(CELL_SIZE / 2 + j * CELL_SIZE);
 					text.setY(CELL_SIZE / 2 + i * CELL_SIZE - (15 * CELL_SIZE / 70) + 70);
-					this.mainScene.addChild(text);
+					mainScene.addChild(text);
 				} else if (flag == -1) {
 					GameObject mine = new Mine();
 					mine.setX(CELL_SIZE / 2 + j * CELL_SIZE);
 					mine.setY(CELL_SIZE / 2 + i * CELL_SIZE + 70);
-					this.mainScene.addChild(mine);
+					mainScene.addChild(mine);
 				}
 			}
 		}
 		
 		// Generate grass.
+		grassBlocks = new GrassBlock[FIELD_WIDTH * FIELD_HEIGHT];
 		for (int i = 0; i < FIELD_HEIGHT; i++) {
 			for (int j = 0; j < FIELD_WIDTH; j++) {
-				GameObject grass = new GrassBlock((j + i) % 2 == 0);
+				state[j][i] = BlockState.GRASS;
+				GrassBlock grass = new GrassBlock(j, i, (j + i) % 2 == 0);
 				grass.setX(CELL_SIZE / 2 + j * CELL_SIZE);
 				grass.setY(CELL_SIZE / 2 + i * CELL_SIZE + 70);
 				grass.setId(String.format("grass_%d_%d", j, i));
-				this.mainScene.addChild(grass);
+				grassBlocks[i * FIELD_WIDTH + j] = grass;
+				mainScene.addChild(grass);
 			}
 		}
+	}
+
+	public static void processClick(int x, int y) {
+		BlockLogic.massClick(FIELD_WIDTH, FIELD_HEIGHT, field, state, new BlockPos(x, y)).forEach(pos -> {
+			GrassBlock grass = grassBlocks[pos.y * FIELD_WIDTH + pos.x];
+			grass.setClick();
+			grassBlocks[pos.y * FIELD_WIDTH + pos.x] = null;
+			state[pos.x][pos.y] = BlockState.EMPTY;
+		});
 	}
 }

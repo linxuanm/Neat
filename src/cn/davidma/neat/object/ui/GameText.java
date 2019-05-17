@@ -122,4 +122,14 @@ public class GameText extends SceneObject {
 	public Text getRenderNode() {
 		return this.renderCache;
 	}
+	
+	@Override
+	public void bringToFront() {
+		this.renderCache.toFront();
+	}
+	
+	@Override
+	public void bringToBack() {
+		this.renderCache.toBack();
+	}
 }

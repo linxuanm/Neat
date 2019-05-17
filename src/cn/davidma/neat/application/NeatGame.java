@@ -1,21 +1,14 @@
 package cn.davidma.neat.application;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import cn.davidma.neat.application.InputHandler.MouseEvent;
-import cn.davidma.neat.application.InputHandler.MouseKey;
 import cn.davidma.neat.layout.GameScene;
 import cn.davidma.neat.object.SceneObject;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -90,19 +83,6 @@ public abstract class NeatGame extends Application {
 	 * The currently active GameScene.
 	 */
 	private GameScene gameScene;
-	/**
-	 * Maps each node in {@link javafx.scene.Scene} to a SceneObject.
-	 * 
-	 * <p>
-	 * Used for handling mouse clicks. 
-	 * </p>
-	 * 
-	 * <p>
-	 * Do <b>not</b> touch this if you don't know what you are doing.
-	 * Meddling with this map <b>will</b> cause a crash. 
-	 * </p>
-	 */
-	public Map<Node, SceneObject> clickMap;
 	
 	private Timeline timeline;
 	private javafx.scene.Group group;
@@ -111,7 +91,6 @@ public abstract class NeatGame extends Application {
 	public NeatGame() {
 		super();
 		instance = this;
-		this.clickMap = new HashMap<Node, SceneObject>();
 	}
 	
 	/**
@@ -234,12 +213,10 @@ public abstract class NeatGame extends Application {
 	 */
 	public NeatGame setScene(GameScene gameScene) {
 		this.group.getChildren().clear();
-		this.clickMap.clear();
 		this.gameScene = gameScene;
 		for (SceneObject i: this.gameScene) {
 			Node render = i.getRenderNode();
 			this.group.getChildren().add(render);
-			this.clickMap.put(render, i);
 		}
 		
 		return this;
@@ -263,19 +240,6 @@ public abstract class NeatGame extends Application {
 		
 		this.scene.addEventHandler(KeyEvent.KEY_RELEASED, key -> {
 			InputHandler.setKeyUp(key.getCode().toString());
-		});
-		
-		this.scene.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
-			EventTarget target = event.getTarget();
-			if (target instanceof Node && !(target instanceof Pane)) {
-				MouseKey mouseKey;
-				if (event.getButton() == MouseButton.PRIMARY) mouseKey = MouseKey.LEFT;
-				else if (event.getButton() == MouseButton.SECONDARY) mouseKey = MouseKey.RIGHT;
-				else return;
-				
-				MouseEvent mouseEvent = new MouseEvent(mouseKey, (int) event.getSceneX(), (int) event.getSceneY());
-				this.clickMap.get((Node) event.getTarget()).onClick(mouseEvent);
-			}
 		});
 		
 		stage.setScene(this.scene);

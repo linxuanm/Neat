@@ -1,5 +1,6 @@
 package cn.davidma.neat.object;
 
+import cn.davidma.neat.application.InputHandler.MouseEvent;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,6 +14,7 @@ public abstract class GameObject extends SceneObject {
 		this.renderCache = new ImageView();
 		this.renderCache.setOnMouseEntered(event -> this.onMouseEnter());
 		this.renderCache.setOnMouseExited(event -> this.onMouseExit());
+		this.renderCache.setOnMouseClicked(event -> this.onClick(new MouseEvent(event)));
 		this.renderChanged = true;
 	}
 	
@@ -48,6 +50,16 @@ public abstract class GameObject extends SceneObject {
 	@Override
 	public ImageView getRenderNode() {
 		return this.renderCache;
+	}
+	
+	@Override
+	public void bringToFront() {
+		this.renderCache.toFront();
+	}
+	
+	@Override
+	public void bringToBack() {
+		this.renderCache.toBack();
 	}
 	
 	/**

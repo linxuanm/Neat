@@ -53,6 +53,14 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	 * @return The Node to be added to {@link javafx.scene.Scene}.
 	 */
 	public abstract Node getRenderNode();
+	/**
+	 * Brings the SceneObject to the front of the scene.
+	 */
+	public abstract void bringToFront();
+	/**
+	 * Brings the SceneObject to the back of the scene.
+	 */
+	public abstract void bringToBack();
 	
 	/**
 	 * Called when the SceneObject is clicked.

@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import javafx.scene.input.MouseButton;
+
 /**
  * A static handler that handles all input events.
  * 
@@ -90,9 +92,17 @@ public class InputHandler {
 			this.x = x;
 			this.y = y;
 		}
+		
+		public MouseEvent(javafx.scene.input.MouseEvent event) {
+			this.mouseKey = MouseKey.None;
+			if (event.getButton() == MouseButton.PRIMARY) mouseKey = MouseKey.LEFT;
+			else if (event.getButton() == MouseButton.SECONDARY) mouseKey = MouseKey.RIGHT;
+			this.x = (int) event.getSceneX();
+			this.y = (int) event.getSceneY();
+		}
 	}
 	
 	public enum MouseKey {
-		LEFT, RIGHT;
+		LEFT, RIGHT, None;
 	}
 }

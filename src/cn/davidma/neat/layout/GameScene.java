@@ -55,7 +55,6 @@ public class GameScene implements IParent<SceneObject> {
 		NeatGame instance = NeatGame.getInstance();
 		if (instance.getScene() == this) {
 			instance.getGroup().getChildren().remove(sceneObject.getRenderNode());
-			instance.clickMap.remove(sceneObject.getRenderNode());
 		}
 	}
 	
@@ -76,7 +75,6 @@ public class GameScene implements IParent<SceneObject> {
 		NeatGame instance = NeatGame.getInstance();
 		if (instance.getScene() == this) {
 			instance.getGroup().getChildren().add(sceneObject.getRenderNode());
-			instance.clickMap.put(sceneObject.getRenderNode(), sceneObject);
 		}
 		
 		this.sceneObjs.put(sceneObject.getId(), sceneObject);
@@ -98,6 +96,16 @@ public class GameScene implements IParent<SceneObject> {
 				this.addChild((SceneObject) i);
 			}
 		}
+	}
+	
+	/**
+	 * Finds a SceneObject based on its ID.
+	 * 
+	 * @param The ID of the SceneObject.
+	 * @return The SceneObject.
+	 */
+	public SceneObject findChild(String id) {
+		return this.sceneObjs.get(id);
 	}
 
 	@Override
