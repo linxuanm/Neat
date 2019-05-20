@@ -5,17 +5,16 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public abstract class GameObject extends SceneObject {
+public abstract class GameObject extends SceneObject<ImageView> {
 	
+	private String path;
 	private Image image;
-	private ImageView renderCache;
 	
 	public GameObject() {
 		this.renderCache = new ImageView();
 		this.renderCache.setOnMouseEntered(event -> this.onMouseEnter());
 		this.renderCache.setOnMouseExited(event -> this.onMouseExit());
 		this.renderCache.setOnMouseClicked(event -> this.onClick(new MouseEvent(event)));
-		this.renderChanged = true;
 	}
 	
 	/**
@@ -24,42 +23,9 @@ public abstract class GameObject extends SceneObject {
 	 * @param path The relative path (from the location of the children class) of the image.
 	 */
 	public void setImage(String path) {
-		this.image = new Image(this.getClass().getResource(path).toExternalForm());
-		this.renderChanged = true;
-	}
-	
-	@Override
-	public void render() {
-		if (this.isVisible() && this.image != null) {
-			if (this.renderChanged) {
-				double targetWidth = image.getWidth() * this.getScaleX();
-				double targetHeight = image.getHeight() * this.getScaleY();
-				
-				this.renderCache.setImage(this.image);
-				this.renderCache.setFitWidth(targetWidth);
-				this.renderCache.setFitHeight(targetHeight);
-				this.renderCache.setX(this.getX() - targetWidth / 2);
-				this.renderCache.setY(this.getY() - targetHeight / 2);
-				this.renderCache.setRotate(this.getRotation());
-				this.renderCache.setOpacity(this.getOpacity());
-				this.renderChanged = false;
-			}
-		}
-	}
-	
-	@Override
-	public ImageView getRenderNode() {
-		return this.renderCache;
-	}
-	
-	@Override
-	public void bringToFront() {
-		this.renderCache.toFront();
-	}
-	
-	@Override
-	public void bringToBack() {
-		this.renderCache.toBack();
+		this.path = path;
+		this.image = new Image(this.path);
+		this.renderCache.setImage(this.image);
 	}
 	
 	/**
@@ -67,8 +33,40 @@ public abstract class GameObject extends SceneObject {
 	 * 
 	 * @param colorAdjust The color adjust to be set.
 	 */
-	public void setColorEffect(ColorAdjust colorAdjust) {
+	public GameObject setColorEffect(ColorAdjust colorAdjust) {
 		this.renderCache.setEffect(colorAdjust);
-		this.renderChanged = true;
+		
+		return this;
+	}
+	
+	@Override
+	public void setX(int x) {
+		super.setX(x);
+		this.renderCache.setX(this.getX() - this.renderCache.getFitWidth() / 2);
+	}
+	
+	@Override
+	public void setY(int y) {
+		super.setY(y);
+		this.renderCache.setY(this.getY() - this.renderCache.getFitHeight() / 2);
+	}
+	
+	@Override
+	public void setScaleX(double scaleX) {
+		super.setScaleX(scaleX);
+		this.renderCache.setFitWidth(this.getScaleX());
+		this.setX(this.getX());
+	}
+	
+	@Override
+	public void setScaleY(double scaleY) {
+		super.setScaleY(scaleY);
+		this.renderCache.setFitHeight(this.getScaleY());
+		this.setY(this.getY());
+	}
+	
+	@Override
+	public void constructRender() {
+		super.constructRender();
 	}
 }

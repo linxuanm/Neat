@@ -2,6 +2,7 @@ package test;
 
 import cn.davidma.neat.object.GameObject;
 import cn.davidma.neat.util.MathUtil;
+import cn.davidma.neat.util.PathUtil;
 
 public class Background extends GameObject {
 	
@@ -12,7 +13,7 @@ public class Background extends GameObject {
 	
 	@Override
 	public void start() {
-		this.setImage("resources/images/square.png");
+		this.setImage(PathUtil.fromRelativePath(Background.class, "resources/images/square.png"));
 		this.setX(Minesweeper.FIELD_WIDTH * Minesweeper.CELL_SIZE / 2);
 		this.setY(Minesweeper.FIELD_HEIGHT * Minesweeper.CELL_SIZE / 2 + Minesweeper.BAR_SIZE);
 		this.setScaleX(Minesweeper.FIELD_WIDTH * Minesweeper.CELL_SIZE);

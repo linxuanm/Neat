@@ -1,12 +1,10 @@
 package cn.davidma.neat.application;
 
 import cn.davidma.neat.layout.GameScene;
-import cn.davidma.neat.object.SceneObject;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -214,10 +212,10 @@ public abstract class NeatGame extends Application {
 	public NeatGame setScene(GameScene gameScene) {
 		this.group.getChildren().clear();
 		this.gameScene = gameScene;
-		for (SceneObject i: this.gameScene) {
-			Node render = i.getRenderNode();
-			this.group.getChildren().add(render);
-		}
+		this.gameScene.forEach(sceneObject -> {
+			sceneObject.constructRender();
+			this.group.getChildren().add(sceneObject.getRenderNode());
+		});
 		
 		return this;
 	}
@@ -283,9 +281,6 @@ public abstract class NeatGame extends Application {
 		if (this.gameScene != null) {
 			this.gameScene.forEach(sceneObject -> {
 				sceneObject.update();
-			});
-			this.gameScene.forEach(sceneObject -> {
-				sceneObject.render();
 			});
 		}
 	}

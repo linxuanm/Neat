@@ -5,13 +5,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class GameText extends SceneObject {
+public class GameText extends SceneObject<Text> {
 	
 	private String text;
 	private double size;
 	private String font;
 	private Color color;
-	private Text renderCache;
 	
 	public GameText() {
 		this.text = "";
@@ -19,7 +18,6 @@ public class GameText extends SceneObject {
 		this.size = 10;
 		this.color = Color.BLACK;
 		this.renderCache = new Text();
-		this.renderChanged = true;
 		this.renderCache.setOnMouseEntered(event -> this.onMouseEnter());
 		this.renderCache.setOnMouseExited(event -> this.onMouseExit());
 	}
@@ -31,12 +29,12 @@ public class GameText extends SceneObject {
 	
 	public void setColor(String color) {
 		this.color = Color.web(color);
-		this.renderChanged = true;
+		this.renderCache.setFill(this.color);
 	}
 	
 	public void setColor(int r, int g, int b) {
 		this.color = Color.rgb(r, g, b);
-		this.renderChanged = true;
+		this.renderCache.setFill(this.color);
 	}
 	
 	public double getSize() {
@@ -44,10 +42,8 @@ public class GameText extends SceneObject {
 	}
 	
 	public void setSize(double size) {
-		if (size != this.size) {
-			this.size = size;
-			this.renderChanged = true;
-		}
+		this.size = size;
+		this.renderCache.setFont(new Font(this.font, this.size));
 	}
 	
 	public String getFont() {
@@ -55,10 +51,8 @@ public class GameText extends SceneObject {
 	}
 	
 	public void setFont(String font) {
-		if (!font.equals(this.font)) {
-			this.font = font;
-			this.renderChanged = true;
-		}
+		this.font = font;
+		this.renderCache.setFont(new Font(this.font, this.size));
 	}
 	
 	public String getText() {
@@ -66,10 +60,10 @@ public class GameText extends SceneObject {
 	}
 	
 	public void setText(String text) {
-		if (!text.equals(this.text)) {
-			this.text = text;
-			this.renderChanged = true;
-		}
+		this.text = text;
+		this.renderCache.setText(this.text);
+		this.setX(this.getX());
+		this.setY(this.getY());
 	}
 	
 	@Override
@@ -81,25 +75,14 @@ public class GameText extends SceneObject {
 	public void update() {
 		
 	}
-
+	
 	@Override
-	public void render() {
-		if (this.isVisible()) {
-			if (this.renderChanged) {
-				this.renderCache.setText(this.text);
-				this.renderCache.setFont(new Font(this.font, this.size));
-				this.renderCache.setFill(this.color);
-				this.renderCache.setX(this.getX() - this.getScaleX() / 2);
-				
-				// Opposite because text's pivot is at the bottom.
-				this.renderCache.setY(this.getY() + this.getScaleY() / 2);
-				
-				this.renderCache.setRotate(this.getRotation());
-				this.renderCache.setOpacity(this.getOpacity());
-				
-				this.renderChanged = false;
-			}
-		}
+	public void constructRender() {
+		super.constructRender();
+		this.renderCache.setFill(this.color);
+		this.setFont(this.getFont());
+		this.setText(this.getText());
+		this.setSize(this.getSize());
 	}
 	
 	/**
@@ -117,19 +100,16 @@ public class GameText extends SceneObject {
 	public double getScaleY() {
 		return this.renderCache.getLayoutBounds().getHeight();
 	}
-
+	
 	@Override
-	public Text getRenderNode() {
-		return this.renderCache;
+	public void setX(int x) {
+		super.setX(x);
+		this.renderCache.setX(this.getX() - this.getScaleX() / 2);
 	}
 	
 	@Override
-	public void bringToFront() {
-		this.renderCache.toFront();
-	}
-	
-	@Override
-	public void bringToBack() {
-		this.renderCache.toBack();
+	public void setY(int y) {
+		super.setY(y);
+		this.renderCache.setY(this.getY() + this.getScaleY() / 2);
 	}
 }

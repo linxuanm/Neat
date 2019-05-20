@@ -22,7 +22,7 @@ public enum TextBuilder {
 	public GameText build(int num) {
 		GameText gameText = new GameText(String.valueOf(num));
 		gameText.setFont("Arial");
-		gameText.setSize(Minesweeper.CELL_SIZE * 0.9);
+		gameText.setSize(Minesweeper.CELL_SIZE * 0.8);
 		gameText.setColor(this.r, this.g, this.b);
 		return gameText;
 	}

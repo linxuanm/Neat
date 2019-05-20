@@ -1,6 +1,7 @@
 package test;
 
 import cn.davidma.neat.object.GameObject;
+import cn.davidma.neat.util.PathUtil;
 
 public class Flag extends GameObject {
 	
@@ -11,9 +12,9 @@ public class Flag extends GameObject {
 	
 	@Override
 	public void start() {
-		this.setImage("resources/images/flag.png");
-		this.setScaleX(Minesweeper.CELL_SIZE / 80D);
-		this.setScaleY(Minesweeper.CELL_SIZE / 80D);
+		this.setImage(PathUtil.fromRelativePath(Flag.class, "resources/images/flag.png"));
+		this.setScaleX(Minesweeper.CELL_SIZE * 0.8D);
+		this.setScaleY(Minesweeper.CELL_SIZE * 0.8D);
 		this.falling = -1;
 	}
 

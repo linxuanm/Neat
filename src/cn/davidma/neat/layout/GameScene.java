@@ -12,6 +12,7 @@ import cn.davidma.neat.capability.IParent;
 import cn.davidma.neat.capability.IRelative;
 import cn.davidma.neat.object.SceneObject;
 import cn.davidma.neat.util.StrUtil;
+import javafx.scene.Node;
 
 /**
  * A scene holds a collection of SceneObjects. The scene manages
@@ -19,19 +20,19 @@ import cn.davidma.neat.util.StrUtil;
  * 
  * @author David Ma
  */
-public class GameScene implements IParent<SceneObject> {
+public class GameScene implements IParent<SceneObject<? extends Node>> {
 	
 	/**
 	 * Stores the SceneObjects in this scene.
 	 */
-	private Map<String, SceneObject> sceneObjs;
+	private Map<String, SceneObject<? extends Node>> sceneObjs;
 	/**
 	 * Used for generating unique IDs.
 	 */
 	private int currId;
 	
 	public GameScene() {
-		this.sceneObjs = new HashMap<String, SceneObject>();
+		this.sceneObjs = new HashMap<String, SceneObject<? extends Node>>();
 		this.currId = 0;
 	}
 	
@@ -51,7 +52,7 @@ public class GameScene implements IParent<SceneObject> {
 	 * 
 	 * @param layoutObject The object to be removed.
 	 */
-	public void removeObject(SceneObject sceneObject) {
+	public void removeObject(SceneObject<? extends Node> sceneObject) {
 		NeatGame instance = NeatGame.getInstance();
 		if (instance.getScene() == this) {
 			instance.getGroup().getChildren().remove(sceneObject.getRenderNode());
@@ -67,13 +68,14 @@ public class GameScene implements IParent<SceneObject> {
 	}
 	
 	@Override
-	public void addChild(SceneObject sceneObject) {
+	public void addChild(SceneObject<? extends Node> sceneObject) {
 		if (StrUtil.isEmpty(sceneObject.getId())) {
 			sceneObject.setId(this.genId());
 		}
 		
 		NeatGame instance = NeatGame.getInstance();
 		if (instance.getScene() == this) {
+			sceneObject.constructRender();
 			instance.getGroup().getChildren().add(sceneObject.getRenderNode());
 		}
 		
@@ -93,7 +95,7 @@ public class GameScene implements IParent<SceneObject> {
 				this.addGroup((Group) i);
 			}
 			if (i instanceof SceneObject) {
-				this.addChild((SceneObject) i);
+				this.addChild((SceneObject<?>) i);
 			}
 		}
 	}
@@ -104,17 +106,17 @@ public class GameScene implements IParent<SceneObject> {
 	 * @param The ID of the SceneObject.
 	 * @return The SceneObject.
 	 */
-	public SceneObject findChild(String id) {
+	public SceneObject<? extends Node> findChild(String id) {
 		return this.sceneObjs.get(id);
 	}
 
 	@Override
-	public List<SceneObject> getChildren() {
-		return new ArrayList<SceneObject>(this.sceneObjs.values());
+	public List<SceneObject<? extends Node>> getChildren() {
+		return new ArrayList<SceneObject<? extends Node>>(this.sceneObjs.values());
 	}
 
 	@Override
-	public void mapChildren(Consumer<SceneObject> operation) {
+	public void mapChildren(Consumer<SceneObject<? extends Node>> operation) {
 		this.sceneObjs.values().forEach(operation);
 	}
 
@@ -129,7 +131,7 @@ public class GameScene implements IParent<SceneObject> {
 	}
 
 	@Override
-	public Iterator<SceneObject> iterator() {
+	public Iterator<SceneObject<? extends Node>> iterator() {
 		return this.sceneObjs.values().iterator();
 	}
 }

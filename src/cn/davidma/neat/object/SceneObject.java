@@ -11,21 +11,22 @@ import javafx.scene.Node;
  * The basic object that is meant to be added in the game.
  * It should be able to be displayed on the screen.
  * 
+ * @param R The type of {@link javafx.scene.Node} the SceneObject is supposed to produce.
+ * 
  * @author David Ma
  */
-public abstract class SceneObject extends LayoutObject implements IRelative {
+public abstract class SceneObject<R extends Node> extends LayoutObject implements IRelative {
 	
 	/**
 	 * The unique ID given to each LayoutObject;
 	 * this will be randomly assigned if left empty.
 	 */
 	private String id;
-	private GameScene parentScene;
-	
 	/**
-	 * Whether this object's render should be recalculated next frame.
+	 * The {@link javafx.scene.Node} the SceneObject is supposed to produce.
 	 */
-	protected boolean renderChanged;
+	protected R renderCache;
+	private GameScene parentScene;
 	
 	private int x;
 	private int y;
@@ -35,6 +36,10 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	private double opacity = 1;
 	private boolean showing = true;
 	
+	public SceneObject() {
+		
+	}
+	
 	/**
 	 * Called when the GameObject is first added to the scene.
 	 */
@@ -43,24 +48,41 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	 * Called every tick.
 	 */
 	public abstract void update();
+	
 	/**
-	 * Renders the SceneObject.
+	 * Constructs the {@link #renderCache} from the properties.
 	 */
-	public abstract void render();
+	public void constructRender() {
+		this.setX(this.getX());
+		this.setY(this.getY());
+		this.setScaleX(this.getScaleX());
+		this.setScaleY(this.getScaleY());
+		this.setRotation(this.getRotation());
+		this.setOpacity(this.getOpacity());
+	}
+	
 	/**
 	 * Gets the initial Node to be added to {@link javafx.scene.Scene}.
 	 * 
 	 * @return The Node to be added to {@link javafx.scene.Scene}.
 	 */
-	public abstract Node getRenderNode();
+	public R getRenderNode() {
+		return this.renderCache;
+	}
+	
 	/**
 	 * Brings the SceneObject to the front of the scene.
 	 */
-	public abstract void bringToFront();
+	public void bringToFront() {
+		this.renderCache.toFront();
+	}
+	
 	/**
 	 * Brings the SceneObject to the back of the scene.
 	 */
-	public abstract void bringToBack();
+	public void bringToBack() {
+		this.renderCache.toBack();
+	}
 	
 	/**
 	 * Called when the SceneObject is clicked.
@@ -90,7 +112,7 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	/**
 	 * Returns this for chaining purpose.
 	 */
-	public SceneObject setId(String id) {
+	public SceneObject<R> setId(String id) {
 		if (StrUtil.isEmpty(this.id)) {
 			this.id = id;
 		} else {
@@ -133,10 +155,7 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	}
 	
 	public void setX(int x) {
-		if (x != this.x) {
-			this.x = x;
-			this.renderChanged = true;
-		}
+		this.x = x;
 	}
 	
 	@Override
@@ -149,10 +168,7 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	}
 	
 	public void setY(int y) {
-		if (y != this.y) {
-			this.y = y;
-			this.renderChanged = true;
-		}
+		this.y = y;
 	}
 
 	@Override
@@ -165,10 +181,8 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	}
 	
 	public void setRotation(double rotation) {
-		if (rotation != this.rotation) {
-			this.rotation = rotation;
-			this.renderChanged = true;
-		}
+		this.rotation = rotation;
+		this.renderCache.setRotate(this.rotation);
 	}
 
 	@Override
@@ -179,8 +193,6 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	@Override
 	public void rotate(double angle, int x, int y) {
 		this.rotate(angle);
-		
-		
 	}
 	
 	public double getScaleX() {
@@ -188,10 +200,7 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	}
 	
 	public void setScaleX(double scaleX) {
-		if (scaleX != this.scaleX) {
-			this.scaleX = scaleX;
-			this.renderChanged = true;
-		}
+		this.scaleX = scaleX;
 	}
 	
 	public double getScaleY() {
@@ -199,10 +208,7 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	}
 	
 	public void setScaleY(double scaleY) {
-		if (scaleY != this.scaleY) {
-			this.scaleY = scaleY;
-			this.renderChanged = true;
-		}
+		this.scaleY = scaleY;
 	}
 
 	@Override
@@ -219,14 +225,12 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 	}
 	
 	public double getOpacity() {
-		return this.opacity;
+		return this.showing ? this.opacity : 0;
 	}
 	
 	public void setOpacity(double opacity) {
-		if (opacity != this.opacity) {
-			this.opacity = opacity;
-			this.renderChanged = true;
-		}
+		this.opacity = opacity;
+		this.renderCache.setOpacity(this.getOpacity());
 	}
 	
 	public boolean isVisible() {
@@ -235,17 +239,11 @@ public abstract class SceneObject extends LayoutObject implements IRelative {
 
 	@Override
 	public void hide() {
-		if (this.showing) {
-			this.showing = false;
-			this.renderChanged = true;
-		}
+		this.showing = false;
 	}
 
 	@Override
 	public void show() {
-		if (!this.showing) {
-			this.showing = true;
-			this.renderChanged = true;
-		}
+		this.showing = true;
 	}
 }

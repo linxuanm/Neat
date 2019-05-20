@@ -8,7 +8,6 @@ import cn.davidma.neat.application.NeatGame;
 import cn.davidma.neat.layout.GameScene;
 import cn.davidma.neat.layout.Group;
 import cn.davidma.neat.object.GameObject;
-import cn.davidma.neat.object.SceneObject;
 import cn.davidma.neat.object.ui.GameText;
 import test.BlockLogic.BlockPos;
 
@@ -43,6 +42,7 @@ public class Minesweeper extends NeatGame {
 	private static List<BlockPos> mines;
 	private static GrassBlock[] grassBlocks;
 	private static double shakeFactor;
+	private static boolean running;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -62,6 +62,7 @@ public class Minesweeper extends NeatGame {
 
 	@Override
 	protected void gameStart() {
+		running = true;
 		mainScene = new GameScene();
 		setScene(mainScene);
 		rand = new Random();
@@ -70,7 +71,7 @@ public class Minesweeper extends NeatGame {
 		// Generate background.
 		for (int i = 0; i < FIELD_HEIGHT; i++) {
 			for (int j = 0; j < FIELD_WIDTH; j++) {
-				GameObject background = new BackgroundBlock((j + i) % 2 == 0);
+				BackgroundBlock background = new BackgroundBlock((j + i) % 2 == 0);
 				background.setX(CELL_SIZE / 2 + j * CELL_SIZE);
 				background.setY(CELL_SIZE / 2 + i * CELL_SIZE + BAR_SIZE);
 				all.addChild(background);
@@ -104,7 +105,7 @@ public class Minesweeper extends NeatGame {
 				if (flag > 0) {
 					GameText text = TextBuilder.getText(flag);
 					text.setX(CELL_SIZE / 2 + j * CELL_SIZE);
-					text.setY(CELL_SIZE / 2 + i * CELL_SIZE - (15 * CELL_SIZE / 70) + BAR_SIZE);
+					text.setY(CELL_SIZE / 2 + i * CELL_SIZE - (12 * CELL_SIZE / 70) + BAR_SIZE);
 					mainScene.addChild(text);
 					all.addChild(text);
 				} else if (flag == -1) {
@@ -156,7 +157,7 @@ public class Minesweeper extends NeatGame {
 			all.setY(newY);
 			
 			shakeFactor *= 0.95;
-			if (shakeFactor <= 1e-3) {
+			if (shakeFactor <= 1) {
 				shakeFactor = 0;
 				all.setX(0);
 				all.setY(0);
@@ -173,7 +174,7 @@ public class Minesweeper extends NeatGame {
 			System.out.println("Ya lose!");
 			mines.forEach(pos -> {
 				GrassBlock grass = grassBlocks[pos.y * FIELD_WIDTH + pos.x];
-				SceneObject explosion = new Explosion();
+				Explosion explosion = new Explosion();
 				explosion.setX(grass.getX());
 				explosion.setY(grass.getY());
 				mainScene.addChild(explosion);
@@ -183,6 +184,7 @@ public class Minesweeper extends NeatGame {
 			});
 			shakeFactor = 20;
 			mainScene.addChild(new Background());
+			running = false;
 			return;
 		}
 		
@@ -199,13 +201,16 @@ public class Minesweeper extends NeatGame {
 	}
 	
 	public static void killGrass(int x, int y) {
-		GrassBlock grass = grassBlocks[y * FIELD_WIDTH + x];
-		grass.setClick();
-		grassBlocks[y * FIELD_WIDTH + x] = null;
-		state[x][y] = BlockState.EMPTY;
-		if (--grassLeft <= 0) {
-			mainScene.addChild(new Background());
-			System.out.println("Ya win!");
+		if (running) {
+			GrassBlock grass = grassBlocks[y * FIELD_WIDTH + x];
+			grass.setClick();
+			grassBlocks[y * FIELD_WIDTH + x] = null;
+			state[x][y] = BlockState.EMPTY;
+			if (--grassLeft <= 0) {
+				mainScene.addChild(new Background());
+				running = false;
+				System.out.println("Ya win!");
+			}
 		}
 	}
 	

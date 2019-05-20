@@ -2,6 +2,7 @@ package test;
 
 import cn.davidma.neat.object.GameObject;
 import cn.davidma.neat.util.MathUtil;
+import cn.davidma.neat.util.PathUtil;
 import javafx.scene.effect.ColorAdjust;
 
 public class BackgroundBlock extends GameObject {
@@ -20,7 +21,7 @@ public class BackgroundBlock extends GameObject {
 	public void start() {
 		this.setScaleX(Minesweeper.CELL_SIZE);
 		this.setScaleY(Minesweeper.CELL_SIZE);
-		this.setImage("resources/images/square.png");
+		this.setImage(PathUtil.fromRelativePath(BackgroundBlock.class, "resources/images/square.png"));
 		this.setColorEffect(this.dark ? DARK : LIGHT);
 	}
 
