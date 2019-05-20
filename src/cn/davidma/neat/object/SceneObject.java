@@ -1,6 +1,7 @@
 package cn.davidma.neat.object;
 
 import cn.davidma.neat.application.InputHandler;
+import cn.davidma.neat.application.InputHandler.MouseEvent;
 import cn.davidma.neat.capability.IRelative;
 import cn.davidma.neat.layout.GameScene;
 import cn.davidma.neat.layout.LayoutObject;
@@ -36,8 +37,11 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 	private double opacity = 1;
 	private boolean showing = true;
 	
-	public SceneObject() {
-		
+	public SceneObject(R renderCache) {
+		this.renderCache = renderCache;
+		this.renderCache.setOnMouseEntered(event -> this.onMouseEnter());
+		this.renderCache.setOnMouseExited(event -> this.onMouseExit());
+		this.renderCache.setOnMouseClicked(event -> this.onClick(new MouseEvent(event)));
 	}
 	
 	/**
@@ -73,15 +77,19 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 	/**
 	 * Brings the SceneObject to the front of the scene.
 	 */
-	public void bringToFront() {
+	public SceneObject<R> bringToFront() {
 		this.renderCache.toFront();
+		
+		return this;
 	}
 	
 	/**
 	 * Brings the SceneObject to the back of the scene.
 	 */
-	public void bringToBack() {
+	public SceneObject<R> bringToBack() {
 		this.renderCache.toBack();
+		
+		return this;
 	}
 	
 	/**
@@ -109,9 +117,6 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 		return this.id;
 	}
 	
-	/**
-	 * Returns this for chaining purpose.
-	 */
 	public SceneObject<R> setId(String id) {
 		if (StrUtil.isEmpty(this.id)) {
 			this.id = id;
@@ -154,8 +159,10 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 		return this.x;
 	}
 	
-	public void setX(int x) {
+	public SceneObject<R> setX(int x) {
 		this.x = x;
+		
+		return this;
 	}
 	
 	@Override
@@ -167,8 +174,10 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 		return this.y;
 	}
 	
-	public void setY(int y) {
+	public SceneObject<R> setY(int y) {
 		this.y = y;
+		
+		return this;
 	}
 
 	@Override
@@ -180,9 +189,11 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 		return this.rotation;
 	}
 	
-	public void setRotation(double rotation) {
+	public SceneObject<R> setRotation(double rotation) {
 		this.rotation = rotation;
 		this.renderCache.setRotate(this.rotation);
+		
+		return this;
 	}
 
 	@Override
@@ -199,16 +210,20 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 		return this.scaleX;
 	}
 	
-	public void setScaleX(double scaleX) {
+	public SceneObject<R> setScaleX(double scaleX) {
 		this.scaleX = scaleX;
+		
+		return this;
 	}
 	
 	public double getScaleY() {
 		return this.scaleY;
 	}
 	
-	public void setScaleY(double scaleY) {
+	public SceneObject<R> setScaleY(double scaleY) {
 		this.scaleY = scaleY;
+		
+		return this;
 	}
 
 	@Override
@@ -228,9 +243,11 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 		return this.showing ? this.opacity : 0;
 	}
 	
-	public void setOpacity(double opacity) {
+	public SceneObject<R> setOpacity(double opacity) {
 		this.opacity = opacity;
 		this.renderCache.setOpacity(this.getOpacity());
+		
+		return this;
 	}
 	
 	public boolean isVisible() {

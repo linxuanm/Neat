@@ -1,6 +1,5 @@
 package cn.davidma.neat.object;
 
-import cn.davidma.neat.application.InputHandler.MouseEvent;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,10 +10,7 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	private Image image;
 	
 	public GameObject() {
-		this.renderCache = new ImageView();
-		this.renderCache.setOnMouseEntered(event -> this.onMouseEnter());
-		this.renderCache.setOnMouseExited(event -> this.onMouseExit());
-		this.renderCache.setOnMouseClicked(event -> this.onClick(new MouseEvent(event)));
+		super(new ImageView());
 	}
 	
 	/**
@@ -22,10 +18,12 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	 * 
 	 * @param path The relative path (from the location of the children class) of the image.
 	 */
-	public void setImage(String path) {
+	public GameObject setImage(String path) {
 		this.path = path;
 		this.image = new Image(this.path);
 		this.renderCache.setImage(this.image);
+		
+		return this;
 	}
 	
 	/**
@@ -40,29 +38,37 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	}
 	
 	@Override
-	public void setX(int x) {
+	public GameObject setX(int x) {
 		super.setX(x);
 		this.renderCache.setX(this.getX() - this.renderCache.getFitWidth() / 2);
+		
+		return this;
 	}
 	
 	@Override
-	public void setY(int y) {
+	public GameObject setY(int y) {
 		super.setY(y);
 		this.renderCache.setY(this.getY() - this.renderCache.getFitHeight() / 2);
+		
+		return this;
 	}
 	
 	@Override
-	public void setScaleX(double scaleX) {
+	public GameObject setScaleX(double scaleX) {
 		super.setScaleX(scaleX);
 		this.renderCache.setFitWidth(this.getScaleX());
 		this.setX(this.getX());
+		
+		return this;
 	}
 	
 	@Override
-	public void setScaleY(double scaleY) {
+	public GameObject setScaleY(double scaleY) {
 		super.setScaleY(scaleY);
 		this.renderCache.setFitHeight(this.getScaleY());
 		this.setY(this.getY());
+		
+		return this;
 	}
 	
 	@Override
