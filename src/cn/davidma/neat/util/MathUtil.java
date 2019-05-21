@@ -1,5 +1,6 @@
 package cn.davidma.neat.util;
 
+import cn.davidma.neat.object.GameObject;
 import javafx.scene.effect.ColorAdjust;
 
 /**
@@ -85,6 +86,18 @@ public class MathUtil {
 	}
 	
 	/**
+	 * Checks whether the given value is in the specified interval (inclusive).
+	 * 
+	 * @param value The value.
+	 * @param start The start of the interval (inclusive).
+	 * @param end The end of the interval (inclusive).
+	 * @return Whether the value is in range.
+	 */
+	public static boolean inRange(double value, double start, double end) {
+		return value >= start && value <= end;
+	}
+	
+	/**
 	 * Determines whether the two interval overlaps (inclusive) with each other.
 	 * 
 	 * @param firstStart The start of the first interval (inclusive).
@@ -95,5 +108,48 @@ public class MathUtil {
 	 */
 	public static boolean rangeOverlap(double firstStart, double firstEnd, double secondStart, double secondEnd) {
 		return !(firstStart > secondEnd || firstEnd < secondStart);
+	}
+	
+	/**
+	 * Determines whether the given point is touching the GameObject.
+	 * 
+	 * @param x The x position of the point.
+	 * @param y The y position of the point.
+	 * @param gameObject The GameObject.
+	 * @return
+	 */
+	public static boolean pointTouchingGameObject(double x, double y, GameObject gameObject) {
+		double half = gameObject.getFitWidth() / 2;
+		if (!inRange(x, gameObject.getX() - half, gameObject.getX() + half)) return false;
+		
+		half = gameObject.getFitHeight() / 2;
+		return inRange(y, gameObject.getY() - half, gameObject.getY() + half);
+	}
+	
+	/**
+	 * Checks whether two GameObjects are overlapping each other.
+	 * 
+	 * <p>
+	 * Note that this only use the image on screen as the bounding box.
+	 * </p>
+	 * 
+	 * @param first The first GameObject.
+	 * @param second The second GameObject.
+	 * @return Whether the two GameObjects are overlapping each other.
+	 */
+	public static boolean gameObjectOverlap(GameObject first, GameObject second) {
+		int firstX = first.getX();
+		int secondX = second.getX();
+		double firstHalf = first.getFitWidth() / 2;
+		double secondHalf = second.getFitWidth() / 2;
+		if (!rangeOverlap(firstX - firstHalf, firstX + firstHalf, secondX - secondHalf, secondX + secondHalf)) {
+			return false;
+		}
+		
+		int firstY = first.getY();
+		int secondY = second.getY();
+		firstHalf = first.getFitHeight() / 2;
+		secondHalf = second.getFitHeight() / 2;
+		return rangeOverlap(firstY - firstHalf, firstY + firstHalf, secondY - secondHalf, secondX + secondHalf);
 	}
 }
