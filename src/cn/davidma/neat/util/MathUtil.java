@@ -2,6 +2,11 @@ package cn.davidma.neat.util;
 
 import javafx.scene.effect.ColorAdjust;
 
+/**
+ * This class does math. Wadda u expect?
+ * 
+ * @author David Ma
+ */
 public class MathUtil {
 	
 	/**
@@ -60,6 +65,15 @@ public class MathUtil {
 		return map(targetBrightness, 0, 100, -1, 0);
 	}
 	
+	/**
+	 * Calculates the final color to change a white color to.
+	 * 
+	 * @param targetHue  The hue of the target color [0, 360).
+	 * @param targetSaturation The saturation of the target color [0, 100].
+	 * @param targetBrightness The brightness of the target color [0, 100].
+	 * @param contrast The contrast of the color.
+	 * @return The ColorAdjust object of the target color.
+	 */
 	public static ColorAdjust convColorAdjust(double targetHue, double targetSaturation, double targetBrightness,
 			double contrast) {
 		ColorAdjust result = new ColorAdjust();
@@ -68,5 +82,18 @@ public class MathUtil {
 		result.setBrightness(convBrightness(targetBrightness));
 		result.setContrast(contrast);
 		return result;
+	}
+	
+	/**
+	 * Determines whether the two interval overlaps (inclusive) with each other.
+	 * 
+	 * @param firstStart The start of the first interval (inclusive).
+	 * @param firstEnd The end of the first interval (inclusive).
+	 * @param secondStart The start of the second interval (inclusive).
+	 * @param secondEnd The end of the second interval (inclusive).
+	 * @return
+	 */
+	public static boolean rangeOverlap(double firstStart, double firstEnd, double secondStart, double secondEnd) {
+		return !(firstStart > secondEnd || firstEnd < secondStart);
 	}
 }

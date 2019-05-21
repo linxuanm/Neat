@@ -233,11 +233,11 @@ public abstract class NeatGame extends Application {
 		this.scene = new Scene(root, this.width, this.height, this.backgroundColor);
 		
 		this.scene.addEventHandler(KeyEvent.KEY_PRESSED, key -> {
-			InputHandler.setKeyDown(key.getCode().toString());
+			InputManager.setKeyDown(key.getCode().toString());
 		});
 		
 		this.scene.addEventHandler(KeyEvent.KEY_RELEASED, key -> {
-			InputHandler.setKeyUp(key.getCode().toString());
+			InputManager.setKeyUp(key.getCode().toString());
 		});
 		
 		stage.setScene(this.scene);
@@ -282,6 +282,7 @@ public abstract class NeatGame extends Application {
 			this.gameScene.forEach(sceneObject -> {
 				sceneObject.update();
 			});
+			this.gameScene.removeDeleteMark();
 		}
 	}
 }

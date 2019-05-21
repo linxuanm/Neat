@@ -75,4 +75,22 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	public void constructRender() {
 		super.constructRender();
 	}
+	
+	/**
+	 * Gets the width of the display on screen of this GameObject.
+	 * 
+	 * @return The width of the display on screen of this GameObject.
+	 */
+	public double getFitWidth() {
+		return this.renderCache.getFitWidth();
+	}
+	
+	/**
+	 * Gets the height of the display on screen of this GameObject.
+	 * 
+	 * @return The height of the display on screen of this GameObject.
+	 */
+	public double getFitHeight() {
+		return this.renderCache.getFitHeight();
+	}
 }

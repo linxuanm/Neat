@@ -53,6 +53,7 @@ public class GameScene implements IParent<SceneObject<? extends Node>> {
 	 * @param layoutObject The object to be removed.
 	 */
 	public void removeObject(SceneObject<? extends Node> sceneObject) {
+		sceneObject.setShouldRemove();
 		NeatGame instance = NeatGame.getInstance();
 		if (instance.getScene() == this) {
 			instance.getGroup().getChildren().remove(sceneObject.getRenderNode());
@@ -133,5 +134,12 @@ public class GameScene implements IParent<SceneObject<? extends Node>> {
 	@Override
 	public Iterator<SceneObject<? extends Node>> iterator() {
 		return this.sceneObjs.values().iterator();
+	}
+	
+	/**
+	 * Remove objects that are removed as "shouldRemove".
+	 */
+	public void removeDeleteMark() {
+		this.sceneObjs.entrySet().removeIf(entry -> entry.getValue().shouldRemove());
 	}
 }

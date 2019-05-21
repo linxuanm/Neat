@@ -1,7 +1,7 @@
 package cn.davidma.neat.object;
 
-import cn.davidma.neat.application.InputHandler;
-import cn.davidma.neat.application.InputHandler.MouseEvent;
+import cn.davidma.neat.application.InputManager;
+import cn.davidma.neat.application.InputManager.MouseEvent;
 import cn.davidma.neat.capability.IRelative;
 import cn.davidma.neat.layout.GameScene;
 import cn.davidma.neat.layout.LayoutObject;
@@ -27,7 +27,16 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 	 * The {@link javafx.scene.Node} the SceneObject is supposed to produce.
 	 */
 	protected R renderCache;
+	/**
+	 * Whether this SceneObject should be removed.
+	 */
+	private boolean shouldRemove;
 	private GameScene parentScene;
+	
+	/**
+	 * Whether the mouse is hovering on this SceneObject.
+	 */
+	private boolean hover;
 	
 	private int x;
 	private int y;
@@ -95,7 +104,7 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 	/**
 	 * Called when the SceneObject is clicked.
 	 */
-	public void onClick(InputHandler.MouseEvent mouseEvent) {
+	public void onClick(InputManager.MouseEvent mouseEvent) {
 		
 	}
 	
@@ -103,14 +112,18 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 	 * Called when the mouse move to this object.
 	 */
 	public void onMouseEnter() {
-		
+		this.hover = true;
 	}
 	
 	/**
 	 * Called when the mouse leave this object.
 	 */
 	public void onMouseExit() {
-		
+		this.hover = false;
+	}
+	
+	public boolean isMouseHover() {
+		return this.hover;
 	}
 	
 	public String getId() {
@@ -252,6 +265,17 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 	
 	public boolean isVisible() {
 		return this.showing;
+	}
+	
+	/**
+	 * Mark that this SceneObject should be removed.
+	 */
+	public void setShouldRemove() {
+		this.shouldRemove = true;
+	}
+	
+	public boolean shouldRemove() {
+		return this.shouldRemove;
 	}
 
 	@Override

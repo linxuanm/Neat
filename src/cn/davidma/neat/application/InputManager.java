@@ -11,7 +11,7 @@ import javafx.scene.input.MouseButton;
  * 
  * @author David Ma
  */
-public class InputHandler {
+public class InputManager {
 	
 	private static Set<String> keys = new HashSet<String>();
 	private static boolean leftMouseDown;
@@ -62,19 +62,19 @@ public class InputHandler {
 	}
 	
 	public static void setKeyDownHandler(Consumer<String> keyDownHandler) {
-		InputHandler.keyDownHandler = keyDownHandler;
+		InputManager.keyDownHandler = keyDownHandler;
 	}
 	
 	public static void setKeyUpHandler(Consumer<String> keyUpHandler) {
-		InputHandler.keyUpHandler = keyUpHandler;
+		InputManager.keyUpHandler = keyUpHandler;
 	}
 	
 	public static void setMouseDownHandler(Consumer<MouseEvent> mouseDownHandler) {
-		InputHandler.mouseDownHandler = mouseDownHandler;
+		InputManager.mouseDownHandler = mouseDownHandler;
 	}
 	
 	public static void setMouseUpHandler(Consumer<MouseEvent> mouseUpHandler) {
-		InputHandler.mouseUpHandler = mouseUpHandler;
+		InputManager.mouseUpHandler = mouseUpHandler;
 	}
 	
 	/**
