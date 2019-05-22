@@ -1,6 +1,7 @@
 package cn.davidma.neat.object;
 
 import cn.davidma.neat.geometry.BoundingBox;
+import cn.davidma.neat.geometry.CollisionType;
 import cn.davidma.neat.util.MathUtil;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -128,6 +129,10 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	 */
 	public boolean collidingWith(GameObject other) {
 		return MathUtil.boundingBoxOverlap(this.getBoundingBox(), other.getBoundingBox());
+	}
+	
+	public CollisionType getCollisionTypeWith(GameObject other) {
+		return MathUtil.getBoundingBoxCollision(this.getBoundingBox(), other.getBoundingBox());
 	}
 	
 	/**
