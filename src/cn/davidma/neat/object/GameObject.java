@@ -1,5 +1,6 @@
 package cn.davidma.neat.object;
 
+import cn.davidma.neat.geometry.BoundingBox;
 import cn.davidma.neat.util.MathUtil;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -9,9 +10,14 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	
 	private String path;
 	private Image image;
+	/**
+	 * The bounding box of this GameObject. Used for collision detection.
+	 */
+	private BoundingBox boundingBox;
 	
 	public GameObject() {
 		super(new ImageView());
+		this.boundingBox = new BoundingBox(0, 0, 0, 0);
 	}
 	
 	/**
@@ -23,6 +29,7 @@ public abstract class GameObject extends SceneObject<ImageView> {
 		this.path = path;
 		this.image = new Image(this.path);
 		this.renderCache.setImage(this.image);
+		this.updateBoundingBox();
 		
 		return this;
 	}
@@ -42,6 +49,7 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	public GameObject setX(int x) {
 		super.setX(x);
 		this.renderCache.setX(this.getX() - this.renderCache.getFitWidth() / 2);
+		this.updateBoundingBox();
 		
 		return this;
 	}
@@ -50,6 +58,7 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	public GameObject setY(int y) {
 		super.setY(y);
 		this.renderCache.setY(this.getY() - this.renderCache.getFitHeight() / 2);
+		this.updateBoundingBox();
 		
 		return this;
 	}
@@ -78,6 +87,13 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	}
 	
 	/**
+	 * Updates the bounding box of this GameObject.
+	 */
+	private void updateBoundingBox() {
+		this.boundingBox = new BoundingBox(this);
+	}
+	
+	/**
 	 * Gets the width of the display on screen of this GameObject.
 	 * 
 	 * @return The width of the display on screen of this GameObject.
@@ -96,13 +112,22 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	}
 	
 	/**
+	 * Gets the bounding box of this GameObject.
+	 * 
+	 * @return The bounding box.
+	 */
+	public BoundingBox getBoundingBox() {
+		return this.boundingBox;
+	}
+	
+	/**
 	 * Whether this GameObject is colliding with the given GameObject.
 	 * 
 	 * @param other The other GameObject.
 	 * @return Whether they are colliding.
 	 */
 	public boolean collidingWith(GameObject other) {
-		return MathUtil.gameObjectOverlap(this, other);
+		return MathUtil.boundingBoxOverlap(this.getBoundingBox(), other.getBoundingBox());
 	}
 	
 	/**
@@ -113,6 +138,6 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	 * @return Whether they are touching.
 	 */
 	public boolean collidingWithPoint(int x, int y) {
-		return MathUtil.pointTouchingGameObject(x, y, this);
+		return MathUtil.pointInBoundingBox(x, y, this.getBoundingBox());
 	} 
 }

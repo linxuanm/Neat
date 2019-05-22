@@ -1,6 +1,8 @@
 package cn.davidma.neat.util;
 
-import cn.davidma.neat.object.GameObject;
+import cn.davidma.neat.geometry.BoundingBox;
+import cn.davidma.neat.geometry.BoundingBox.Point;
+import cn.davidma.neat.geometry.CollisionType;
 import javafx.scene.effect.ColorAdjust;
 
 /**
@@ -111,45 +113,84 @@ public class MathUtil {
 	}
 	
 	/**
-	 * Determines whether the given point is touching the GameObject.
+	 * Determines whether the given point is touching the BoundingBox.
 	 * 
 	 * @param x The x position of the point.
 	 * @param y The y position of the point.
-	 * @param gameObject The GameObject.
+	 * @param boundingBox The BoundingBox.
 	 * @return
 	 */
-	public static boolean pointTouchingGameObject(double x, double y, GameObject gameObject) {
-		double half = gameObject.getFitWidth() / 2;
-		if (!inRange(x, gameObject.getX() - half, gameObject.getX() + half)) return false;
-		
-		half = gameObject.getFitHeight() / 2;
-		return inRange(y, gameObject.getY() - half, gameObject.getY() + half);
+	public static boolean pointInBoundingBox(double x, double y, BoundingBox boundingBox) {
+		if (!inRange(x, boundingBox.startX, boundingBox.endX)) return false;
+		return inRange(y, boundingBox.startY, boundingBox.endY);
 	}
 	
 	/**
-	 * Checks whether two GameObjects are overlapping each other.
+	 * Checks whether two BoundingBox are overlapping each other.
+	 * 
+	 * @param first The first BoundingBox.
+	 * @param second The second BoundingBox.
+	 * @return Whether the two BoundingBox are overlapping each other.
+	 */
+	public static boolean boundingBoxOverlap(BoundingBox first, BoundingBox second) {
+		if (!rangeOverlap(first.startX, first.endX, second.startX, second.endX))  return false;
+		return rangeOverlap(first.startY, first.endY, second.startY, second.endY);
+	}
+	
+	/**
+	 * Calculates the {@link cn.davidma.neat.geometry.CollisionType} of the given BoundingBoxes.
 	 * 
 	 * <p>
-	 * Note that this only use the image on screen as the bounding box.
+	 * The returned CollisionType is the orientation of the target BoundingBox to the original BoundingBox.
 	 * </p>
 	 * 
-	 * @param first The first GameObject.
-	 * @param second The second GameObject.
-	 * @return Whether the two GameObjects are overlapping each other.
+	 * @param origin The original BoundingBox.
+	 * @param target The target BoundingBox.
+	 * @return The CollisionType of the two BoundingBoxes.
 	 */
-	public static boolean gameObjectOverlap(GameObject first, GameObject second) {
-		int firstX = first.getX();
-		int secondX = second.getX();
-		double firstHalf = first.getFitWidth() / 2;
-		double secondHalf = second.getFitWidth() / 2;
-		if (!rangeOverlap(firstX - firstHalf, firstX + firstHalf, secondX - secondHalf, secondX + secondHalf)) {
-			return false;
+	public static CollisionType getBoundingBoxCollision(BoundingBox origin, BoundingBox target) {
+		if (!boundingBoxOverlap(origin, target)) return CollisionType.NONE;
+		Point originMid = origin.getMidPoint();
+		Point targetMid = target.getMidPoint();
+		double[] angles = origin.getVertsAngles();
+		double targetAngle = getAngle(originMid.x, originMid.y, targetMid.x, targetMid.y);
+		
+		// Special treatment for the last side, thus only 3 sides handled here.
+		for (int i = 0; i < 3; i++) {
+			if (inRange(targetAngle, angles[i], angles[i + 1])) {
+				return CollisionType.values()[i + 1]; // Plus one because the first value is None, and therefore skipped.
+			}
 		}
 		
-		int firstY = first.getY();
-		int secondY = second.getY();
-		firstHalf = first.getFitHeight() / 2;
-		secondHalf = second.getFitHeight() / 2;
-		return rangeOverlap(firstY - firstHalf, firstY + firstHalf, secondY - secondHalf, secondY + secondHalf);
+		// All can be left is right.
+		// Since the right side's vertices can be close two [2 * PI, 0] (this interval crosses 0 radian, and spans
+		// the entire [0, 2 * PI]), it cannot be handled normally.
+		return CollisionType.RIGHT;
+	}
+	
+	/**
+	 * Calculates the angle (in radians) from the first point to the second point.
+	 * 
+	 * <p>
+	 * The angle is measured counter-clockwise from the +x axis.
+	 * </p>
+	 * 
+	 * @param fromX The x position of the original point.
+	 * @param fromY The y position of the original point.
+	 * @param toX The x position of the destination.
+	 * @param toY The y position of the destination.
+	 * @return The angle (in radians) from the first point to the second point.
+	 */
+	public static double getAngle(double fromX, double fromY, double toX, double toY) {
+		double deltaX = toX - fromX;
+		double deltaY = fromY - toY; // Reversed since the y axis is reversed.
+		double result =  Math.atan2(deltaY, deltaX);
+		
+		// Add 2 * PI if in 3 or 4 quadrant.
+		if (toY > fromY) {
+			result += 2 * Math.PI;
+		}
+		
+		return result;
 	}
 }
