@@ -150,6 +150,6 @@ public class MathUtil {
 		int secondY = second.getY();
 		firstHalf = first.getFitHeight() / 2;
 		secondHalf = second.getFitHeight() / 2;
-		return rangeOverlap(firstY - firstHalf, firstY + firstHalf, secondY - secondHalf, secondX + secondHalf);
+		return rangeOverlap(firstY - firstHalf, firstY + firstHalf, secondY - secondHalf, secondY + secondHalf);
 	}
 }

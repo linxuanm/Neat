@@ -1,5 +1,6 @@
 package cn.davidma.neat.object;
 
+import cn.davidma.neat.util.MathUtil;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -93,4 +94,25 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	public double getFitHeight() {
 		return this.renderCache.getFitHeight();
 	}
+	
+	/**
+	 * Whether this GameObject is colliding with the given GameObject.
+	 * 
+	 * @param other The other GameObject.
+	 * @return Whether they are colliding.
+	 */
+	public boolean collidingWith(GameObject other) {
+		return MathUtil.gameObjectOverlap(this, other);
+	}
+	
+	/**
+	 * Whether this GameObject is touching the given point.
+	 * 
+	 * @param x The x position of the point.
+	 * @param y The y position of the point.
+	 * @return Whether they are touching.
+	 */
+	public boolean collidingWithPoint(int x, int y) {
+		return MathUtil.pointTouchingGameObject(x, y, this);
+	} 
 }
