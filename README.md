@@ -27,6 +27,7 @@ This class extends javafx.application.Application, from which directly invoking 
 ### Example Usage
 ```java
 public class ExampleGame extends NeatGame {
+
 	public static void main(String[] args) {		
 		launch(args);
 	}
@@ -36,6 +37,11 @@ public class ExampleGame extends NeatGame {
 		this.setTitle("My Game");
 		this.setSize(1000, 200);
 		this.setBackgroundColor("#000000");
+	}
+
+	@Override
+	protected void gameStart() {
+		// Add scenes and objects, etc.
 	}
 }
 ```
