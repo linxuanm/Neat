@@ -87,6 +87,11 @@ public abstract class GameObject extends SceneObject<ImageView> {
 		super.constructRender();
 	}
 	
+	@Override
+	public boolean isUpdatable() {
+		return true;
+	}
+	
 	/**
 	 * Updates the bounding box of this GameObject.
 	 */

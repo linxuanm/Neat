@@ -84,6 +84,7 @@ public abstract class NeatGame extends Application {
 	
 	private Timeline timeline;
 	private javafx.scene.Group group;
+	private Stage stage;
 	private Scene scene;
 	
 	public NeatGame() {
@@ -227,6 +228,7 @@ public abstract class NeatGame extends Application {
 	public final void start(Stage stage) throws Exception {
 		this.internalInitialization();
 		this.setup();
+		this.stage = stage;
 		
 		Pane root = new Pane();
 		root.getChildren().add(group = new javafx.scene.Group());
@@ -259,15 +261,27 @@ public abstract class NeatGame extends Application {
 	}
 	
 	/**
-	 * Sets up all the configurations of the game window.
+	 * Gets the x position of the window on screen.
 	 * 
-	 * <p>
-	 * Should be overridden, but not mandatory.
-	 * </p>
+	 * @return The x position of the window.
 	 */
-	protected void setup() {
-		
+	public final int getWindowX() {
+		return (int) this.stage.getX();
 	}
+	
+	/**
+	 * Gets the y position of the window on screen.
+	 * 
+	 * @return The y position of the window.
+	 */
+	public final int getWindowY() {
+		return (int) this.stage.getY();
+	}
+	
+	/**
+	 * Sets up all the configurations of the game window. Called before the window launches.
+	 */
+	protected abstract void setup();
 	
 	/**
 	 * Used internally for updating the screen.
@@ -282,7 +296,6 @@ public abstract class NeatGame extends Application {
 			this.gameScene.forEach(sceneObject -> {
 				sceneObject.update();
 			});
-			this.gameScene.removeDeleteMark();
 		}
 	}
 }

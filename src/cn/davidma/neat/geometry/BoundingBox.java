@@ -43,7 +43,7 @@ public class BoundingBox {
 	 * @return The midpoint.
 	 */
 	public Point getMidPoint() {
-		return new Point(this.startX + (this.endX - this.startX) / 2, this.startY + (this.endY - this.startY) / 2);
+		return new Point(this.startX + (this.getWidth()) / 2, this.startY + (this.getHeight()) / 2);
 	}
 	
 	/**
@@ -74,6 +74,24 @@ public class BoundingBox {
 		}
 		return angles;
 	} 
+	
+	/**
+	 * Gets the width of this BoundingBox.
+	 * 
+	 * @return The width of this BoundingBox.
+	 */
+	public int getWidth() {
+		return this.endX - this.startX;
+	}
+	
+	/**
+	 * Gets the height of this BoundingBox.
+	 * 
+	 * @return The height of this BoundingBox.
+	 */
+	public int getHeight() {
+		return this.endY - this.startY;
+	}
 	
 	public static class Point {
 		

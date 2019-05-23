@@ -277,6 +277,19 @@ public abstract class SceneObject<R extends Node> extends LayoutObject implement
 	public boolean shouldRemove() {
 		return this.shouldRemove;
 	}
+	
+	/**
+	 * Whether this SceneObject's update method should be called every tick.
+	 * 
+	 * <p>
+	 * Override this method to stop the SceneObject from updating.
+	 * </p>
+	 * 
+	 * @return Whether this SceneObject is updatable.
+	 */
+	public boolean isUpdatable() {
+		return false;
+	}
 
 	@Override
 	public void hide() {

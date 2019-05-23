@@ -26,13 +26,19 @@ public class GameScene implements IParent<SceneObject<? extends Node>> {
 	 * Stores the SceneObjects in this scene.
 	 */
 	private Map<String, SceneObject<? extends Node>> sceneObjs;
+	private Map<String, SceneObject<? extends Node>> updatable;
 	/**
 	 * Used for generating unique IDs.
 	 */
 	private int currId;
+	/**
+	 * Whether the game should delete SceneObjects that are marked as "to delete" next frame.
+	 */
+	private boolean deleteMarkChanged;
 	
 	public GameScene() {
 		this.sceneObjs = new HashMap<String, SceneObject<? extends Node>>();
+		this.updatable = new HashMap<String, SceneObject<? extends Node>>();
 		this.currId = 0;
 	}
 	
@@ -54,6 +60,7 @@ public class GameScene implements IParent<SceneObject<? extends Node>> {
 	 */
 	public void removeObject(SceneObject<? extends Node> sceneObject) {
 		sceneObject.setShouldRemove();
+		this.deleteMarkChanged = true;
 		NeatGame instance = NeatGame.getInstance();
 		if (instance.getScene() == this) {
 			instance.getGroup().getChildren().remove(sceneObject.getRenderNode());
@@ -81,6 +88,7 @@ public class GameScene implements IParent<SceneObject<? extends Node>> {
 		}
 		
 		this.sceneObjs.put(sceneObject.getId(), sceneObject);
+		if (sceneObject.isUpdatable()) this.updatable.put(sceneObject.getId(), sceneObject);
 		sceneObject.addToScene(this);
 		sceneObject.start();
 	}
@@ -140,6 +148,10 @@ public class GameScene implements IParent<SceneObject<? extends Node>> {
 	 * Remove objects that are removed as "shouldRemove".
 	 */
 	public void removeDeleteMark() {
-		this.sceneObjs.entrySet().removeIf(entry -> entry.getValue().shouldRemove());
+		if (this.deleteMarkChanged) {
+			this.deleteMarkChanged = false;
+			this.sceneObjs.entrySet().removeIf(entry -> entry.getValue().shouldRemove());
+			this.updatable.entrySet().removeIf(entry -> entry.getValue().shouldRemove());
+		}
 	}
 }

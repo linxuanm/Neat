@@ -1,5 +1,6 @@
 package cn.davidma.neat.application;
 
+import java.awt.MouseInfo;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -75,6 +76,24 @@ public class InputManager {
 	
 	public static void setMouseUpHandler(Consumer<MouseEvent> mouseUpHandler) {
 		InputManager.mouseUpHandler = mouseUpHandler;
+	}
+	
+	/**
+	 * Gets the x position of the mouse relative to the window.
+	 * 
+	 * @return The x position of the mouse.
+	 */
+	public static int getMouseX() {
+		return MouseInfo.getPointerInfo().getLocation().x - NeatGame.getInstance().getWindowX();
+	}
+	
+	/**
+	 * Gets the y position of the mouse relative to the window.
+	 * 
+	 * @return The y position of the mouse.
+	 */
+	public static int getMouseY() {
+		return MouseInfo.getPointerInfo().getLocation().y - NeatGame.getInstance().getWindowY();
 	}
 	
 	/**
