@@ -46,6 +46,18 @@ public class ExampleGame extends NeatGame {
 }
 ```
 
+## Objects
+Neat provides a variety of __objects__ to work with in order to simplify the process of creating a game. Each __sprite__ (occasionally refered to as "render") in game, such as image, text, etc, are all objects.
+
+### SceneObject
+__SceneObject__ refers to objects that can be added to a game (specifically a [GameScene](#SceneManaging), which will be discussed later). SceneObject is an basic class that represents an object on screen, and hence have attributes such as location, rotation and size. Some basic operations can be found below:
+- ```SceneObject#(get/set)X```
+- ```SceneObject#(get/set)Y```
+- ```SceneObject#(get/set)Rotation```
+- ```SceneObject#(get/set)Opacity```
+
+Note that all setters return "this" instance to allow chaining (i.e. ```mySceneObject.setX(100).setY(100).setScaleX(400).setScaleY(200);```).
+
 ## Scene Managing
 To ease the managing of collections of objects, Neat has a scene managing system.
 
@@ -55,7 +67,7 @@ Each game can only have __one__ GameScene active at the same time, and each Scen
 
 When a scene is not active, all operations, including rendering, updating and callbacking, of its SceneObjects will be stopped.
 
-To make a GameScene active, call ```NeatGame#setScene```.
+To make a GameScene active, call ```NeatGame#setScene```; to add a SceneObject to a GameScene, call ```GameScene#addChild```.
 
 ## Group
-A [Group](src/cn/davidma/neat/layout/Group.java) is a collection of SceneObjects.
+A [Group](src/cn/davidma/neat/layout/Group.java) is a collection of SceneObjects. A Group can be used to manage SceneObjects, as well as to apply certain actions to all SceneObjects in the Group.

@@ -6,5 +6,13 @@ package cn.davidma.neat.network;
  * @author David Ma
  */
 public enum Side {
-	SERVER, CLIENT;
+
+	/**
+	 * This is the server.
+	 */
+	SERVER,
+	/**
+	 * This is a client.
+	 */
+	CLIENT;
 }

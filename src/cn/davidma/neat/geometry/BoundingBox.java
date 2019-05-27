@@ -93,6 +93,30 @@ public class BoundingBox {
 		return this.endY - this.startY;
 	}
 	
+	/**
+	 * Whether this BoundingBox is colliding with the given BoundingBox.
+	 * 
+	 * @param other The other BoundingBox.
+	 * @return Whether they are colliding.
+	 */
+	public boolean collidingWith(BoundingBox other) {
+		return MathUtil.boundingBoxOverlap(this, other);
+	}
+	
+	/**
+	 * Gets the CollisionType of this BoundingBox to another BoundingBox.
+	 * 
+	 * <p>
+	 * The CollisionType returned is in relative of this BoundingBox.
+	 * </p>
+	 * 
+	 * @param other The other BoundingBox.
+	 * @return The CollitionType.
+	 */
+	public CollisionType getCollisionTypeWith(BoundingBox other) {
+		return MathUtil.getBoundingBoxCollision(this, other);
+	}
+	
 	public static class Point {
 		
 		public int x;

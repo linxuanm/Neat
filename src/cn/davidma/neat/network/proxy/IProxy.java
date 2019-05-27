@@ -1,10 +1,11 @@
 package cn.davidma.neat.network.proxy;
 
+import java.io.IOException;
+
 import cn.davidma.neat.network.Side;
-import cn.davidma.neat.network.packet.Packet;
 
 /**
- * This interface marks that a class is a representation of a device based on the type of connection.
+ * The base of all proxies.
  * 
  * @author David Ma
  */
@@ -18,9 +19,7 @@ public interface IProxy {
 	public Side getSide();
 	
 	/**
-	 * Sends a packet to the device.
-	 * 
-	 * @param packet The packet to be sent.
+	 * Terminates the connection.
 	 */
-	public void send(Packet packet);
+	public void terminate() throws IOException;
 }

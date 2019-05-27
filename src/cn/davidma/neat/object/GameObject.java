@@ -2,6 +2,7 @@ package cn.davidma.neat.object;
 
 import cn.davidma.neat.geometry.BoundingBox;
 import cn.davidma.neat.geometry.CollisionType;
+import cn.davidma.neat.render.ImageCache;
 import cn.davidma.neat.util.MathUtil;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -28,7 +29,7 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	 */
 	public GameObject setImage(String path) {
 		this.path = path;
-		this.image = new Image(this.path);
+		this.image = ImageCache.loadImage(this.path);
 		this.renderCache.setImage(this.image);
 		this.updateBoundingBox();
 		
@@ -133,11 +134,21 @@ public abstract class GameObject extends SceneObject<ImageView> {
 	 * @return Whether they are colliding.
 	 */
 	public boolean collidingWith(GameObject other) {
-		return MathUtil.boundingBoxOverlap(this.getBoundingBox(), other.getBoundingBox());
+		return this.getBoundingBox().collidingWith(other.getBoundingBox());
 	}
 	
+	/**
+	 * Gets the CollisionType of this GameObject to another GameObject.
+	 * 
+	 * <p>
+	 * The CollisionType returned is in relative of this GameObject.
+	 * </p>
+	 * 
+	 * @param other The other GameObject.
+	 * @return The CollitionType.
+	 */
 	public CollisionType getCollisionTypeWith(GameObject other) {
-		return MathUtil.getBoundingBoxCollision(this.getBoundingBox(), other.getBoundingBox());
+		return this.getBoundingBox().getCollisionTypeWith(other.getBoundingBox());
 	}
 	
 	/**
