@@ -13,13 +13,13 @@ import cn.davidma.neat.network.packet.Packet;
 public class RemoteServerProxy implements IRemoteProxy {
 	
 	private Socket connection;
-	private DataInputStream inputStream;
-	private DataOutputStream outputStream;
+	private DataInputStream reader;
+	private DataOutputStream writer;
 	
 	public RemoteServerProxy(String host, int port) throws UnknownHostException, IOException {
 		this.connection = new Socket(host, port);
-		this.inputStream = new DataInputStream(this.connection.getInputStream());
-		this.outputStream = new DataOutputStream(this.connection.getOutputStream());
+		this.reader = new DataInputStream(this.connection.getInputStream());
+		this.writer = new DataOutputStream(this.connection.getOutputStream());
 	}
 	
 	@Override
@@ -29,8 +29,8 @@ public class RemoteServerProxy implements IRemoteProxy {
 
 	@Override
 	public void terminate() throws IOException {
-		this.inputStream.close();
-		this.outputStream.close();
+		this.reader.close();
+		this.writer.close();
 		this.connection.close();
 	}
 
