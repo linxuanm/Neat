@@ -3,6 +3,7 @@ package cn.davidma.neat.network.proxy.local;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import cn.davidma.neat.network.NetworkManager;
 import cn.davidma.neat.network.Side;
 import cn.davidma.neat.network.proxy.remote.RemoteServerProxy;
 
@@ -26,6 +27,10 @@ public class LocalClientProxy implements ILocalProxy {
 
 	@Override
 	public void run() {
+		if (NetworkManager.isRunning()) return;
+		NetworkManager.setRunning();
 		
+		final Thread remoteServerThread = new Thread(this.serverRepr);
+		remoteServerThread.start();
 	}
 }

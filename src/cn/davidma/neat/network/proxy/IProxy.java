@@ -9,7 +9,7 @@ import cn.davidma.neat.network.Side;
  * 
  * @author David Ma
  */
-public interface IProxy {
+public interface IProxy extends Runnable {
 	
 	/**
 	 * Gets the side of the proxy.

@@ -15,5 +15,5 @@ public interface IRemoteProxy extends IProxy {
 	 * 
 	 * @param packet The packet to be sent.
 	 */
-	public void send(Packet packet);
+	void send(Packet packet);
 }

@@ -1,6 +1,7 @@
 package cn.davidma.neat.network.packet;
 
-import java.nio.ByteBuffer;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
 /**
  * A packet is a structure that contains data. It is send to other devices via the network.
@@ -10,16 +11,16 @@ import java.nio.ByteBuffer;
 public interface Packet {
 	
 	/**
-	 * Reads and populates this packet with data from a given {@link java.nio.ByteBuffer}.
+	 * Reads and populates this packet with data from a given {@link java.io.DataInputStream}.
 	 * 
-	 * @param buffer The ByteBuffer from which this packet should construct.
+	 * @param buffer The DataInputStream from whose data this packet should construct.
 	 */
-	public void readFromBytes(ByteBuffer buffer);
+	public void readFromStream(DataInputStream reader);
 	
 	/**
-	 * Writes the data from this packet to a given {@link java.nio.ByteBuffer}.
+	 * Writes the data from this packet to a given {@link java.io.DataOutputStream}.
 	 * 
-	 * @param buffer The ByteBuffer to which data from the packet should write.
+	 * @param buffer The DataOutputStream to which data from the packet should write.
 	 */
-	public void dumpToBytes(ByteBuffer buffer);
+	public void dumpToStream(DataOutputStream writer);
 }

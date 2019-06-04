@@ -1,7 +1,5 @@
 package cn.davidma.neat.network.proxy.local;
 
-import java.io.IOException;
-
 import cn.davidma.neat.network.proxy.IProxy;
 
 /**
@@ -15,8 +13,4 @@ import cn.davidma.neat.network.proxy.IProxy;
  */
 public interface ILocalProxy extends IProxy {
 	
-	/**
-	 * Starts the receiving loop.
-	 */
-	public void run() throws IOException;
 }
