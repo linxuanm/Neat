@@ -1,6 +1,7 @@
 package cn.davidma.neat.application;
 
 import cn.davidma.neat.layout.GameScene;
+import cn.davidma.neat.network.NetworkManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -10,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 /**
@@ -229,6 +231,10 @@ public abstract class NeatGame extends Application {
 		this.internalInitialization();
 		this.setup();
 		this.stage = stage;
+		
+		this.stage.setOnCloseRequest((WindowEvent event) -> {
+			NetworkManager.terminateConnection();
+		});
 		
 		Pane root = new Pane();
 		root.getChildren().add(group = new javafx.scene.Group());

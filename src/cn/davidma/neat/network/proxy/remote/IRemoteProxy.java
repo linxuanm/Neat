@@ -1,5 +1,7 @@
 package cn.davidma.neat.network.proxy.remote;
 
+import java.net.Socket;
+
 import cn.davidma.neat.network.packet.Packet;
 import cn.davidma.neat.network.proxy.IProxy;
 
@@ -16,4 +18,11 @@ public interface IRemoteProxy extends IProxy {
 	 * @param packet The packet to be sent.
 	 */
 	void send(Packet packet);
+	
+	/**
+	 * Gets the socket of the connection.
+	 * 
+	 * @return The socket of the connection.
+	 */
+	Socket getConnection();
 }

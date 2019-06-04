@@ -1,5 +1,6 @@
 package cn.davidma.neat.network.proxy.local;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -55,13 +56,20 @@ public class LocalServerProxy implements ILocalProxy, Iterable<RemoteClientProxy
 			} catch (IOException e) {
 				
 				// Eats the error.
-				continue;
+				throw new IOError(e);
 			}
+			
+			this.clients.removeIf((RemoteClientProxy clientProxy) -> );
 		}
 	}
 	
 	@Override
 	public Iterator<RemoteClientProxy> iterator() {
 		return this.clients.iterator();
+	}
+
+	@Override
+	public List<RemoteClientProxy> getAllRemoteProxies() {
+		return new ArrayList<RemoteClientProxy>(this.clients);
 	}
 }
